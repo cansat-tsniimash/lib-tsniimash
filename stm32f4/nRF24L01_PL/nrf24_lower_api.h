@@ -108,7 +108,6 @@ void rf24_read_register(uint8_t reg_addr, uint8_t * reg_data, size_t data_size);
    data_size - размер буфера с записываемыми данными */
 void rf24_write_register(uint8_t reg_addr, const uint8_t * reg_data, size_t data_size);
 
-
 // Чтение полученного пакета
 /* Аргументы:
    payload_buffer - буфер в который кладутся байты прочитанного пакета
@@ -119,7 +118,6 @@ void rf24_write_register(uint8_t reg_addr, const uint8_t * reg_data, size_t data
    Для получения длины полученного пакета можно использовать */
 void rf24_read_rx_payload(uint8_t * payload_buffer, size_t payload_buffer_size);
 
-
 // Запись пакета для отправки
 /* Аргументы:
    payload_buffer - указатель на буфер с отправляемым пакетом
@@ -129,18 +127,14 @@ void rf24_read_rx_payload(uint8_t * payload_buffer, size_t payload_buffer_size);
    Эта функция реализует две команды: W_TX_PAYLOAD_NOACK и W_TX_PAYLOAD */
 void rf24_write_tx_payload(const uint8_t * payload_buffer, size_t payload_size, bool use_ack);
 
-
 // Сброс всех данных из буферов RF на отправку
 void rf24_flush_tx(void);
-
 
 // Сброс всех полученных rf24 пакетов
 void rf24_flush_rx(void);
 
-
 // Повтор предыдущего отправляемого пакета
 void rf24_ruse_tx_pl(void);
-
 
 // Получает из радио размер полученного пакета
 /* Документация говорит, что нужно сделать flush_rx (или он был сделан?)
@@ -148,10 +142,8 @@ void rf24_ruse_tx_pl(void);
    Предполагаю что для пустого FIFO прочитается ноль? */
 void rf24_get_rx_payload_size(uint8_t * payload_size);
 
-
 // Запись пакета для отправки вместе с очередным ACK пакетом
 void rf24_write_ack_payload(const uint8_t * payload, size_t payload_size);
-
 
 // Получение статуса устройства
 void rf24_get_status(uint8_t * status);

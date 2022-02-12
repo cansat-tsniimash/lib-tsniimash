@@ -7,6 +7,7 @@
 
 #include <stm32f4xx_hal.h>
 #ifdef HAL_SPI_MODULE_ENABLED
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -22,7 +23,7 @@ extern SPI_HandleTypeDef hspi2;
 #define CS_PORT GPIOA
 #define CS_PIN GPIO_PIN_0
 
-void _rf24_CS(bool mode)
+static void _rf24_CS(bool mode)
 {
 	if (mode)
 	{
@@ -45,10 +46,8 @@ void rf24_read_register(uint8_t reg_addr, uint8_t * reg_data, size_t data_size)
 	// Добавляем в 5 битов адреса еще 3 бита для чтения из этого регистра
 	reg_addr = reg_addr & ~((1 << 5) | (1 << 6) | (1 << 7));
 
-	// Передаем адресс регистра, который читаем
+	// Передаем адресс регистра, который читаем и читаем данные
 	HAL_SPI_Transmit(&hspi2, &reg_addr, 1, HAL_MAX_DELAY);
-
-	// Читаем данные
 	HAL_SPI_Receive(&hspi2, reg_data, data_size, HAL_MAX_DELAY);
 
 	_rf24_CS(false);
@@ -58,28 +57,10 @@ void rf24_write_register(uint8_t reg_addr, const uint8_t * reg_data, size_t data
 {
 	_rf24_CS(true);
 
-	// Добавляем в 5 битов адреса еще 3 бита для чтения из этого регистра
-	//printf("addr pre 0x%02X\n", (int)reg_addr);
+	// Добавляем в 5 битов адреса еще 3 бита для записи в регистр
 	reg_addr = (reg_addr & ~((1 << 6) | (1 << 7))) | (1 << 5);
-	//reg_addr &= ~((1 << 7) | (1 << 6));
-	//reg_addr |= (1 << 5);
-	//printf("addr after 0x%02X\n", (int)reg_addr);
 
-	//printf("write_reg_tx: ");
-
-	//char bits_buffer[10] = {0};
-	//print_bits(reg_addr, bits_buffer);
-	//printf("addr 0x%02X (0b%s); ", (int)reg_addr, bits_buffer);
-
-	//for (size_t i = 0; i < data_size; i++)
-	//{
-		//memset(bits_buffer, 0x00, sizeof(bits_buffer));
-		//print_bits(reg_data[i], bits_buffer);
-		//printf("0x%02X (0b%s) ", (int)reg_data[i], bits_buffer);
-	//}
-	//printf("\n");
-
-	// Передаем адресс регистра, который читаем, на шину spi и получаем в ответ значение STATUS регистра
+	// Передаем адресс регистра, в который пишем и пишем в регистр
 	HAL_SPI_Transmit(&hspi2, &reg_addr, 1, HAL_MAX_DELAY);
 	HAL_SPI_Transmit(&hspi2, (uint8_t*)reg_data, data_size, HAL_MAX_DELAY);
 
@@ -90,14 +71,18 @@ void rf24_read_rx_payload(uint8_t * payload_buffer, size_t payload_buffer_size)
 {
 	uint8_t command = RF24_R_RX_PAYLOAD;
 	uint8_t payload_size = 0;
+    // Считываем размер данных
 	rf24_get_rx_payload_size(&payload_size);
+	// Если размер данных от 1 до 32, то читаем данные
 	if (payload_size > 0 || payload_size < 32)
 	{
+		// Если места на запись меньше, чем у нас есть данных, читем сколько, сколько есть места
 		if (payload_size > payload_buffer_size)
 		{
 			payload_size = payload_buffer_size;
 		}
 		_rf24_CS(true);
+		// Читаем данные
 		HAL_SPI_Transmit(&hspi2, &command, 1, HAL_MAX_DELAY);
 		HAL_SPI_Receive(&hspi2, payload_buffer, payload_size, HAL_MAX_DELAY);
 		_rf24_CS(false);
@@ -108,7 +93,7 @@ void rf24_write_tx_payload(const uint8_t * payload_buffer, size_t payload_size, 
 {
 	uint8_t command;
 	_rf24_CS(true);
-
+	// Учитываем использование ack
 	if (use_ack)
 	{
 		command = RF24_W_TX_PAYLOAD;
@@ -117,7 +102,7 @@ void rf24_write_tx_payload(const uint8_t * payload_buffer, size_t payload_size, 
 	{
 		command = RF24_W_TX_PAYLOAD_NO_ACK;
 	}
-	/*передаем команду */
+	// Передаем команду
 	HAL_SPI_Transmit(&hspi2, &command, 1, HAL_MAX_DELAY);
 	HAL_SPI_Transmit(&hspi2, (uint8_t*)payload_buffer, payload_size, HAL_MAX_DELAY);
 
@@ -147,6 +132,7 @@ void rf24_get_rx_payload_size(uint8_t * payload_size)
 	HAL_SPI_Transmit(&hspi2, &command, 1, HAL_MAX_DELAY);
 	HAL_SPI_Receive(&hspi2, payload_size, 1, HAL_MAX_DELAY);
 	_rf24_CS(false);
+	// Если размер данных больше 32, то отчищаем rx буфер и зануляем его
     if (*payload_size > 32)
     {
     	rf24_flush_rx();
@@ -162,9 +148,6 @@ void rf24_get_status(uint8_t * status)
 	_rf24_CS(false);
 }
 
-
-// Управление CE пином модуля.
-/* onoff: значение true - CE прижат к полу; false - CE поднят к 1 */
 void rf24_ce_activate(bool onoff)
 {
 	if (onoff)
@@ -176,4 +159,5 @@ void rf24_ce_activate(bool onoff)
 		HAL_GPIO_WritePin(CE_PORT, CE_PIN,  GPIO_PIN_SET);
 	}
 }
+
 #endif /* HAL_SPI_MODULE_ENABLED */
