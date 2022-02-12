@@ -15,6 +15,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+// Регистры
 #define RF24_REGADDR_CONFIG			0x00
 #define RF24_REGADDR_EN_AA			0x01
 #define RF24_REGADDR_EN_RXADDR		0x02
@@ -51,8 +52,6 @@
 // Нет данных в TX буферах
 #define RF24_STATUS_TX_FULL	(1 << 0)
 
-// Это поле в статусе идет не одни битом а числом, поэтому для них можно сделать функции
-// Я для разнообразия сделаю сложный макрос с параметром
 
 // Номер пайпа, пакет с которого ожидает выгребания в RX FIFO
 #define RF24_STATUS_RX_P_NO_GET(status_reg) ((status_reg >> 1) & (0x07)) // 0x07 это 111 в двоичной
@@ -74,25 +73,32 @@
 #define RF24_CONFIG_PRIM_RX		(1 << 0)
 
 
-#define RF24_RFSETUP_CONT_WAVE	(1 << 7)
-#define RF24_RFSETUP_RF_DR_LOW	(1 << 5)
-#define RF24_RFSETUP_PLL_LOCK	(1 << 4)
-#define RF24_RFSETUP_RF_DR_HIGH	(1 << 3)
-#define RF24_RFSETUP_RF_PWR_OFFSET	1
-#define RF24_RFSETUP_RF_PWR_MASK	0x03
+#define RF24_RFSETUP_CONT_WAVE	 (1 << 7)
+#define RF24_RFSETUP_RF_DR_LOW	 (1 << 5)
+#define RF24_RFSETUP_PLL_LOCK	 (1 << 4)
+#define RF24_RFSETUP_RF_DR_HIGH	 (1 << 3)
+#define RF24_RFSETUP_RF_PWR_OFFSET  1
+#define RF24_RFSETUP_RF_PWR_MASK    0x03
 
 
 #define RF24_FEATURE_EN_DPL		(1 << 2)
 #define RF24_FEATURE_EN_ACK_PAY	(1 << 1)
 #define RF24_FEATURE_EN_DYN_ACK	(1 << 0)
 
-#define RF24_NOP 0xFF
-#define RF24_FLUSH_TX	0b11100001
-#define RF24_FLUSH_RX	0b11100010
-#define RF24_W_TX_PAYLOAD 0b10100000
+
+// Команды
+#define R_REGISTER               0b000 // В конец пишется адрес регистра (5 бит)
+#define W_REGISTER               0b001 // В конец пишется адрес регистра (5 бит)
+#define RF24_R_RX_PAYLOAD        0b01100001
+#define RF24_W_TX_PAYLOAD        0b10100000
+#define RF24_FLUSH_TX	         0b11100001
+#define RF24_FLUSH_RX	         0b11100010
+#define REUSE_TX_PL	             0b11100011
+#define RF24_R_RX_PL_WID         0b01100000
+#define W_ACK_PAYLOAD            0b10101 // В конец пишется номер пайпа (3 бита)
 #define RF24_W_TX_PAYLOAD_NO_ACK 0b10110000
-#define RF24_R_RX_PAYLOAD 0b01100001
-#define RF24_R_RX_PL_WID 0b01100000
+#define RF24_NOP                 0b11111111
+
 
 // Чтение данных из регистров RF24
 /* Аргументы:
@@ -143,7 +149,11 @@ void rf24_ruse_tx_pl(void);
 void rf24_get_rx_payload_size(uint8_t * payload_size);
 
 // Запись пакета для отправки вместе с очередным ACK пакетом
-void rf24_write_ack_payload(const uint8_t * payload, size_t payload_size);
+/* Аргументы:
+   payload - указатель на буфер с отправляемым пакетом
+   payload_size - размер отправляемого пакета в буфере payload_buffer
+   pipe - номер пайпа */
+void rf24_write_ack_payload(const uint8_t * payload, size_t payload_size, uint8_t pipe);
 
 // Получение статуса устройства
 void rf24_get_status(uint8_t * status);

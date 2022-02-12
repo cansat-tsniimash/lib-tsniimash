@@ -1,10 +1,3 @@
-/*
- * nrf24_lower_api.c
- *
- *  Created on: 29 янв. 2022 г.
- *      Author: 1
- */
-
 #include <stm32f4xx_hal.h>
 #ifdef HAL_SPI_MODULE_ENABLED
 
@@ -102,7 +95,7 @@ void rf24_write_tx_payload(const uint8_t * payload_buffer, size_t payload_size, 
 	{
 		command = RF24_W_TX_PAYLOAD_NO_ACK;
 	}
-	// Передаем команду
+	// Передаем данные
 	HAL_SPI_Transmit(&hspi2, &command, 1, HAL_MAX_DELAY);
 	HAL_SPI_Transmit(&hspi2, (uint8_t*)payload_buffer, payload_size, HAL_MAX_DELAY);
 
@@ -125,6 +118,15 @@ void rf24_flush_tx(void)
 	_rf24_CS(false);
 }
 
+// Повтор предыдущего отправляемого пакета
+void rf24_ruse_tx_pl(void)
+{
+	uint8_t command = REUSE_TX_PL;
+	_rf24_CS(true);
+	HAL_SPI_Transmit(&hspi2, &command, 1, HAL_MAX_DELAY);
+	_rf24_CS(false);
+}
+
 void rf24_get_rx_payload_size(uint8_t * payload_size)
 {
 	uint8_t command = RF24_R_RX_PL_WID;
@@ -138,6 +140,19 @@ void rf24_get_rx_payload_size(uint8_t * payload_size)
     	rf24_flush_rx();
     	payload_size = 0;
     }
+}
+
+// Запись пакета для отправки вместе с очередным ACK пакетом
+void rf24_write_ack_payload(const uint8_t * payload, size_t payload_size, uint8_t pipe)
+{
+	uint8_t command = (W_ACK_PAYLOAD << 3) | (pipe & 0x07);
+	_rf24_CS(true);
+
+	// Передаем данные
+	HAL_SPI_Transmit(&hspi2, &command, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(&hspi2, (uint8_t*)payload, payload_size, HAL_MAX_DELAY);
+
+	_rf24_CS(false);
 }
 
 void rf24_get_status(uint8_t * status)
