@@ -122,7 +122,7 @@ void nrf24_flush_tx(void)
 // Повтор предыдущего отправляемого пакета
 void nrf24_ruse_tx_pl(void)
 {
-	uint8_t command = REUSE_TX_PL;
+	uint8_t command = NRF24_REUSE_TX_PL;
 	_nrf24_CS(true);
 	HAL_SPI_Transmit(&hspi2, &command, 1, HAL_MAX_DELAY);
 	_nrf24_CS(false);
@@ -146,7 +146,7 @@ void nrf24_get_rx_payload_size(uint8_t * payload_size)
 // Запись пакета для отправки вместе с очередным ACK пакетом
 void nrf24_write_ack_payload(const uint8_t * payload, size_t payload_size, uint8_t pipe)
 {
-	uint8_t command = (W_ACK_PAYLOAD << 3) | (pipe & 0x07);
+	uint8_t command = (NRF24_W_ACK_PAYLOAD << 3) | (pipe & 0x07);
 	_nrf24_CS(true);
 
 	// Передаем данные
