@@ -26,10 +26,10 @@ typedef enum nrf24_data_rate_t
 // Мощность передатчика
 typedef enum nrf24_tx_power_t
 {
-	NRF24_TXPOWER_MINUS_0_DBM,
-	NRF24_TXPOWER_MINUS_6_DBM,
-	NRF24_TXPOWER_MINUS_12_DBM,
-	NRF24_TXPOWER_MINUS_18_DBM
+	NRF24_TXPOWER_MINUS_0_DBM  = 0x03,
+	NRF24_TXPOWER_MINUS_6_DBM  = 0x02,
+	NRF24_TXPOWER_MINUS_12_DBM = 0x01,
+	NRF24_TXPOWER_MINUS_18_DBM = 0x00
 } nrf24_tx_power_t;
 
 
@@ -45,9 +45,9 @@ typedef enum nrf24_crc_size_t
 // Длина используемого куска адреса пайпа
 typedef enum nrf24_address_width_t
 {
-	NRF24_ADDRES_WIDTH_3_BYTES,
-	NRF24_ADDRES_WIDTH_4_BYTES,
-	NRF24_ADDRES_WIDTH_5_BYTES,
+	NRF24_ADDRES_WIDTH_3_BYTES = 0x01,
+	NRF24_ADDRES_WIDTH_4_BYTES = 0x02,
+	NRF24_ADDRES_WIDTH_5_BYTES = 0x03,
 } nrf24_address_width_t;
 
 
