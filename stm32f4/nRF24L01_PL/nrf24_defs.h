@@ -42,8 +42,12 @@
 
 
 // Номер пайпа, пакет с которого ожидает выгребания в RX FIFO
-#define NRF24_STATUS_RX_P_NO_GET(status_reg) ((status_reg >> 1) & (0x07)) // 0x07 это 111 в двоичной
+#define NRF24_STATUS_RX_P_NO_OFFSET 1
+#define NRF24_STATUS_RX_P_NO_MASK   0x07 // 111
 
+// Наличие свободного места в TX буферах
+#define NRF24_STATUS_TX_FULL_OFFSET  0
+#define NRF24_STATUS_TX_FULL_MASK    0x01
 
 // Прерывание по получению данных
 #define NRF24_CONFIG_MASK_RX_DR	 (1 << 6)
@@ -68,6 +72,14 @@
 #define NRF24_RFSETUP_RF_PWR_OFFSET  1
 #define NRF24_RFSETUP_RF_PWR_MASK    0x03
 
+#define NRF24_FIFO_STATUS_TX_FULL_OFFSET  5
+#define NRF24_FIFO_STATUS_TX_FULL_MASK    0x01
+#define NRF24_FIFO_STATUS_TX_EMPTY_OFFSET 4
+#define NRF24_FIFO_STATUS_TX_EMPTY_MASK   0x01
+#define NRF24_FIFO_STATUS_RX_FULL_OFFSET  1
+#define NRF24_FIFO_STATUS_RX_FULL_MASK    0x01
+#define NRF24_FIFO_STATUS_RX_EMPTY_OFFSET 0
+#define NRF24_FIFO_STATUS_RX_EMPTY_MASK   0x01
 
 #define NRF24_FEATURE_EN_DPL		(1 << 2)
 #define NRF24_FEATURE_EN_ACK_PAY	(1 << 1)

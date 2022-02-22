@@ -150,41 +150,95 @@ int nrf24_pipe_set_tx_addr(uint64_t tx_addr)
 
 int nrf24_mode_power_down(void)
 {
-
-	return -1;
+	uint8_t config_reg = 0;
+	nrf24_read_register(NRF24_REGADDR_CONFIG, &config_reg, 1);
+	config_reg &= ~NRF24_CONFIG_PWR_UP;
+	nrf24_write_register(NRF24_REGADDR_CONFIG, &config_reg, 1);
+	return 0;
 }
 
 
 int nrf24_mode_standby(void)
 {
-
-	return -1;
+	uint8_t config_reg = 0;
+	nrf24_read_register(NRF24_REGADDR_CONFIG, &config_reg, 1);
+	config_reg |= NRF24_CONFIG_PWR_UP;
+	nrf24_write_register(NRF24_REGADDR_CONFIG, &config_reg, 1);
+	nrf24_ce_activate(false);
+	return 0;
 }
 
 
 int nrf24_mode_tx(void)
 {
-
-	return -1;
+	uint8_t mode_tx = 0;
+	nrf24_read_register(NRF24_REGADDR_CONFIG, &mode_tx, 1);
+	mode_tx &= ~NRF24_CONFIG_PRIM_RX;
+	nrf24_write_register(NRF24_REGADDR_CONFIG, &mode_tx, 1);
+	nrf24_ce_activate(true);
+	return 0;
 }
 
 
 int nrf24_mode_rx(void)
 {
-
-	return -1;
+	uint8_t mode_tx = 0;
+	nrf24_read_register(NRF24_REGADDR_CONFIG, &mode_tx, 1);
+	mode_tx |= NRF24_CONFIG_PRIM_RX;
+	nrf24_write_register(NRF24_REGADDR_CONFIG, &mode_tx, 1);
+	nrf24_ce_activate(true);
+	return 0;
 }
 
 
 int nrf24_fifo_peek(uint8_t * rx_packet_size, uint8_t * rx_pipe_no, bool * tx_full)
 {
-	return -1;
+	uint8_t status_reg = 0;
+	nrf24_get_status(&status_reg);
+	*tx_full = (status_reg >> NRF24_STATUS_TX_FULL_OFFSET) & NRF24_STATUS_TX_FULL_MASK;
+	*rx_pipe_no = (status_reg >> NRF24_STATUS_RX_P_NO_OFFSET) & NRF24_STATUS_RX_P_NO_MASK;
+	if (*rx_pipe_no <= 0x05)
+	{
+		nrf24_get_rx_payload_size(rx_packet_size);
+	}
+	else
+	{
+		if (*rx_pipe_no != 0x07)
+		{
+			return -1;
+		}
+		*rx_packet_size = 0 ;
+	}
+	return 0;
 }
 
 
 int nrf24_fifo_status(nrf24_fifo_status_t * rx_status, nrf24_fifo_status_t * tx_status)
 {
-	return -1;
+	uint8_t fifo_satus = 0;
+	nrf24_read_register(NRF24_REGADDR_FIFO_STATUS, &fifo_satus, 1);
+	(fifo_satus >> NRF24_FIFO_STATUS_RX_EMPTY_OFFSET) & NRF24_FIFO_STATUS_RX_EMPTY_MASK
+
+	*rx_status = NRF24_FIFO_NOT_EMPTY;
+	if ((fifo_satus >> NRF24_FIFO_STATUS_RX_EMPTY_OFFSET) & NRF24_FIFO_STATUS_RX_EMPTY_MASK == 1)
+	{
+		*rx_status = NRF24_FIFO_EMPTY;
+	}
+	if ((fifo_satus >> NRF24_FIFO_STATUS_RX_FULL_OFFSET) & NRF24_FIFO_STATUS_RX_FULL_MASK == 1)
+	{
+		*rx_status = NRF24_FIFO_FULL;
+	}
+
+	*tx_status = NRF24_FIFO_NOT_EMPTY;
+	if ((fifo_satus >> NRF24_FIFO_STATUS_TX_EMPTY_OFFSET) & NRF24_FIFO_STATUS_TX_EMPTY_MASK == 1)
+	{
+		*tx_status = NRF24_FIFO_EMPTY;
+	}
+	if ((fifo_satus >> NRF24_FIFO_STATUS_TX_FULL_OFFSET) & NRF24_FIFO_STATUS_TX_FULL_MASK == 1)
+	{
+		*tx_status = NRF24_FIFO_FULL;
+	}
+	return 0;
 }
 
 

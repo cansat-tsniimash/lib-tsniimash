@@ -168,11 +168,11 @@ void nrf24_ce_activate(bool onoff)
 {
 	if (onoff)
 	{
-		HAL_GPIO_WritePin(CE_PORT, CE_PIN,  GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(CE_PORT, CE_PIN,  GPIO_PIN_SET);
 	}
 	else
 	{
-		HAL_GPIO_WritePin(CE_PORT, CE_PIN,  GPIO_PIN_SET);
+		HAL_GPIO_WritePin(CE_PORT, CE_PIN,  GPIO_PIN_RESET);
 	}
 }
 
