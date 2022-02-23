@@ -31,7 +31,7 @@ void nrf24_write_register(uint8_t reg_addr, const uint8_t * reg_data, size_t dat
 
    Если полученный пакет не влезает в payload_buffer, то будет записано только то, что влезло
    пакет удалется из NRF24 при чтении. А  максимум он может быть 32 байта.
-   Для получения длины полученного пакета можно использовать */
+   Для получения длины полученного пакета можно использовать nrf24_get_rx_payload_size*/
 void nrf24_read_rx_payload(uint8_t * payload_buffer, size_t payload_buffer_size);
 
 // Запись пакета для отправки
