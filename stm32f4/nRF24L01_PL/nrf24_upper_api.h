@@ -89,7 +89,7 @@ typedef struct nrf24_rf_config_t
 
 
 // Так же  поступим с настройками "пакетизирования". В отдельную структуру
-typedef struct nrf24_packet_protocol_t
+typedef struct nrf24_protocol_config_t
 {
 	// Использовать ли CRC и если использовать то как
 	nrf24_crc_size_t crc_size;
