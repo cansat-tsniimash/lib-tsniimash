@@ -71,7 +71,7 @@ typedef enum nrf24_irq_t
 	// Пакет из TX FIFO успешно отправлен
 	NRF24_IRQ_TX_DR		= (1 << 1),
 	// Кончились попытки на отправку пакета из TX FIFO
-	NRF24_IRQ_MAX_RT		= (1 << 2),
+	NRF24_IRQ_MAX_RT	= (1 << 2),
 } nrf24_irq_t;
 
 

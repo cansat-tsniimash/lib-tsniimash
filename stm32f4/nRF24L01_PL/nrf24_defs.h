@@ -37,14 +37,14 @@
 #define NRF24_STATUS_TX_DS	 (1 << 5)
 // Превышено количество попыток отправки данных
 #define NRF24_STATUS_MAX_RT	 (1 << 4)
+// Флаги прерываний
+#define NRF24_STATUS_FLAG_OFFSET  4
+#define NRF24_STATUS_FLAG_MASK    0x07
 // Нет данных в TX буферах
 #define NRF24_STATUS_TX_FULL (1 << 0)
-
-
 // Номер пайпа, пакет с которого ожидает выгребания в RX FIFO
 #define NRF24_STATUS_RX_P_NO_OFFSET 1
 #define NRF24_STATUS_RX_P_NO_MASK   0x07 // 111
-
 // Наличие свободного места в TX буферах
 #define NRF24_STATUS_TX_FULL_OFFSET  0
 #define NRF24_STATUS_TX_FULL_MASK    0x01
@@ -63,7 +63,6 @@
 #define NRF24_CONFIG_PWR_UP		 (1 << 1)
 // Упрвавление режимом - приём или передача
 #define NRF24_CONFIG_PRIM_RX	 (1 << 0)
-
 
 #define NRF24_RFSETUP_CONT_WAVE	 (1 << 7)
 #define NRF24_RFSETUP_RF_DR_LOW	 (1 << 5)
