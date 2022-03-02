@@ -20,7 +20,7 @@ int nrf24_setup_rf(const nrf24_rf_config_t * config)
 		rf_setup &= ~NRF24_RFSETUP_RF_DR_LOW;
 		rf_setup &= ~NRF24_RFSETUP_RF_DR_HIGH;
 		break;
-	case NRF24_DATARATE_2000_MBIT :
+	case NRF24_DATARATE_2000_KBIT :
 		rf_setup &= ~NRF24_RFSETUP_RF_DR_LOW;
 		rf_setup |= NRF24_RFSETUP_RF_DR_HIGH;
 		break;

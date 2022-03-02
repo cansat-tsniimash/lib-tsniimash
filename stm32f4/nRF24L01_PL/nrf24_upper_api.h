@@ -19,7 +19,7 @@ typedef enum nrf24_data_rate_t
 {
 	NRF24_DATARATE_250_KBIT,
 	NRF24_DATARATE_1000_KBIT,
-	NRF24_DATARATE_2000_MBIT
+	NRF24_DATARATE_2000_KBIT
 } nrf24_data_rate_t;
 
 
