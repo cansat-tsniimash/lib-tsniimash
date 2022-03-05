@@ -101,13 +101,13 @@ typedef struct nrf24_protocol_config_t
 	// Использовать ли ACK пейлоады
 	bool en_ack_payload;
 	// Разрешить ли отправку отдельных пакетов для которых не ожидается ACK
-	// (команда W_TX_PAYLOAD_NOACK)
+	// (void * intf_ptr, команда W_TX_PAYLOAD_NOACK)
 	bool en_dyn_ack;
 
-	// Количество попыток переотправки пакета (от 0 до 15)
+	// Количество попыток переотправки пакета (void * intf_ptr, от 0 до 15)
 	uint8_t auto_retransmit_count;
 	// Пауза между переотправками отправками пакета
-	// 0 - 250 мкс, 1 - 500 мкс, ... 15 - 4000мкс (максимум)
+	// 0 - 250 мкс, 1 - 500 мкс, ... 15 - 4000мкс (void * intf_ptr, максимум)
 	uint8_t auto_retransmit_delay;
 } nrf24_protocol_config_t;
 
@@ -134,12 +134,12 @@ typedef struct nrf24_pipe_config_t
 
 // Настройка радио параметров nrf24
 /* Если все хорошо, возвращает 0. Если плохо - вернет что-то другое */
-int nrf24_setup_rf(const nrf24_rf_config_t * config);
+int nrf24_setup_rf(void * intf_ptr, const nrf24_rf_config_t * config);
 
 
 // Настройка пакетизирования nrf24
 /* Если все хорошо, возвращает 0. Если плохо - вернет что-то другое */
-int nrf24_setup_protocol(const nrf24_protocol_config_t * config);
+int nrf24_setup_protocol(void * intf_ptr, const nrf24_protocol_config_t * config);
 
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -147,22 +147,22 @@ int nrf24_setup_protocol(const nrf24_protocol_config_t * config);
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 // Настройка и разрешение принимающего пайпа
-/* pipe-no - номер пайпа (от 0 до 5)
+/* pipe-no - номер пайпа (void * intf_ptr, от 0 до 5)
    config - настройки */
 /* Если все хорошо, возвращает 0. Если плохо - вернет что-то другое */
-int nrf24_pipe_rx_start(uint8_t pipe_no, const nrf24_pipe_config_t * config);
+int nrf24_pipe_rx_start(void * intf_ptr, uint8_t pipe_no, const nrf24_pipe_config_t * config);
 
 
 // Выключение принимающего пайпа
 /* pipe_no - номер пайпа от 0 до 5
    Если все хорошо, возвращает 0. Если плохо - вернет что-то другое */
-int nrf24_pipe_rx_stop(uint8_t pipe_no);
+int nrf24_pipe_rx_stop(void * intf_ptr, uint8_t pipe_no);
 
 
 // Указание адреса на который мы будем передавать
 /* Значимые только 5 младших байт */
 /* Если все хорошо, возвращает 0. Если плохо - вернет что-то другое */
-int nrf24_pipe_set_tx_addr(uint64_t tx_addr);
+int nrf24_pipe_set_tx_addr(void * intf_ptr, uint64_t tx_addr);
 
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -171,22 +171,22 @@ int nrf24_pipe_set_tx_addr(uint64_t tx_addr);
 
 // Переключение радио в power down режим
 /* Если все хорошо, возвращает 0. Если плохо - вернет что-то другое */
-int nrf24_mode_power_down(void);
+int nrf24_mode_power_down(void * intf_ptr);
 
 
 // Переключение радио в standby режим
 /* Если все хорошо, возвращает 0. Если плохо - вернет что-то другое */
-int nrf24_mode_standby(void);
+int nrf24_mode_standby(void * intf_ptr);
 
 
 // Переключение радио в режим приёма
 /* Если все хорошо, возвращает 0. Если плохо - вернет что-то другое */
-int nrf24_mode_tx(void);
+int nrf24_mode_tx(void * intf_ptr);
 
 
 // Переключение радио в режим передачи
 /* Если все хорошо, возвращает 0. Если плохо - вернет что-то другое */
-int nrf24_mode_rx(void);
+int nrf24_mode_rx(void * intf_ptr);
 
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -198,11 +198,11 @@ int nrf24_mode_rx(void);
    packet_size - по этому указателю функцию запишет размер ожидающего пакета
       Если пакета нет, то запишет 0
    pipe_no - по этому указателю функция запишет номер пайпа с которого пришел пакет
-      Если пакета нет - значение не определено (считай любое)
+      Если пакета нет - значение не определено (void * intf_ptr, считай любое)
    tx_full - true если tx фифо забито
 
    Если все хорошо - функция вернет 0. Если плохо - вернет что-то другое */
-int nrf24_fifo_peek(uint8_t * rx_packet_size, uint8_t * rx_pipe_no, bool * tx_full);
+int nrf24_fifo_peek(void * intf_ptr, uint8_t * rx_packet_size, uint8_t * rx_pipe_no, bool * tx_full);
 
 
 // Функция для получения более подробного статуса фифо
@@ -211,7 +211,7 @@ int nrf24_fifo_peek(uint8_t * rx_packet_size, uint8_t * rx_pipe_no, bool * tx_fu
    tx_status - по этому указателю запишется заполненость TX фифо
 
    Если все хорошо - функция вернет 0. Если плохо - вернет что-то другое */
-int nrf24_fifo_status(nrf24_fifo_status_t * rx_status, nrf24_fifo_status_t * tx_status);
+int nrf24_fifo_status(void * intf_ptr, nrf24_fifo_status_t * rx_status, nrf24_fifo_status_t * tx_status);
 
 
 // Функция для чтения пакета из приёмного FIFO
@@ -222,10 +222,10 @@ int nrf24_fifo_status(nrf24_fifo_status_t * rx_status, nrf24_fifo_status_t * tx_
    Если пакет в FIFO больше чем передаваемый буфер - функция запишет только то что поместилось,
    а остальные выкинет.
    FIXME: может просто давать ошибку и не выгребать пакет с радио? пусть лежит
-   Вернет функция размер выгребенного пакета (даже если он не влез в буфер)
+   Вернет функция размер выгребенного пакета (void * intf_ptr, даже если он не влез в буфер)
    Если вернула 0 - никакого пакета в фифо не было
    Если вернула < 0 - что-то пошло не так */
-int nrf24_fifo_read(uint8_t * packet_buffer, uint8_t packet_buffer_size);
+int nrf24_fifo_read(void * intf_ptr, uint8_t * packet_buffer, uint8_t packet_buffer_size);
 
 
 // Функция для отправки пакета в радио
@@ -241,21 +241,21 @@ int nrf24_fifo_read(uint8_t * packet_buffer, uint8_t packet_buffer_size);
    Вернет размер записанного куска пакета если все хорошо
    Если дать размер 0 - ничего не сделает и вернет 0
    Если что-то пошло не так вернет < 0 */
-int nrf24_fifo_write(const uint8_t * packet, uint8_t packet_size, bool use_ack);
+int nrf24_fifo_write(void * intf_ptr, const uint8_t * packet, uint8_t packet_size, bool use_ack);
 
 // Запись пакета для отправки вместе с ACK
 // Аналогична функции nrf24_fifo_write, только позволяет указывать пайп на который пишется
 // пакет
-int nrf24_fifo_write_ack_pld(uint8_t pipe_no, const uint8_t * packet, uint8_t packet_size);
+int nrf24_fifo_write_ack_pld(void * intf_ptr, uint8_t pipe_no, const uint8_t * packet, uint8_t packet_size);
 
 
 // Очистка TX FIFO
 /* Если все хорошо - функция вернет 0. Если плохо - вернет что-то другое */
-int nrf24_fifo_flush_tx(void);
+int nrf24_fifo_flush_tx(void * intf_ptr);
 
 // Очистка RX FIFO
 /* Если все хорошо - функция вернет 0. Если плохо - вернет что-то другое */
-int nrf24_fifo_flush_rx(void);
+int nrf24_fifo_flush_rx(void * intf_ptr);
 
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -268,7 +268,7 @@ int nrf24_fifo_flush_rx(void);
    которая соответствуют набору событий в радио
 
    Если все хорошо - вернет 0. Если нет - вернет что-то другое */
-int nrf24_irq_get(int * composition);
+int nrf24_irq_get(void * intf_ptr, int * composition);
 
 
 // Очистка флагов прерывания
@@ -276,7 +276,7 @@ int nrf24_irq_get(int * composition);
    composition - битовая композиция значений nrf24_irq_t, соответствующая сбрасываемым флагам прерываний
 
    Если все хорошо - вернет 0. Если нет - вернет что-то другое */
-int nrf24_irq_clear(int composition);
+int nrf24_irq_clear(void * intf_ptr, int composition);
 
 #endif /* HAL_SPI_MODULE_ENABLED */
 #endif /* NRF24_UPPER_H_ */
