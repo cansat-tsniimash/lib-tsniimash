@@ -112,19 +112,19 @@ int nrf24_pipe_rx_start(void * intf_ptr, uint8_t pipe_no, const nrf24_pipe_confi
 		rx_pw = NRF24_REGADDR_RX_PW_P1;
 		break;
 	case 2:
-		nrf24_write_register(intf_ptr, NRF24_REGADDR_RX_ADDR_P2, ((uint8_t *)(&config->address) + 4), 1);
+		nrf24_write_register(intf_ptr, NRF24_REGADDR_RX_ADDR_P2, ((uint8_t *)(&config->address) + 5), 1);
 		rx_pw = NRF24_REGADDR_RX_PW_P2;
 		break;
 	case 3:
-		nrf24_write_register(intf_ptr, NRF24_REGADDR_RX_ADDR_P3, ((uint8_t *)(&config->address) + 4), 1);
+		nrf24_write_register(intf_ptr, NRF24_REGADDR_RX_ADDR_P3, ((uint8_t *)(&config->address) + 5), 1);
 		rx_pw = NRF24_REGADDR_RX_PW_P3;
 		break;
 	case 4:
-		nrf24_write_register(intf_ptr, NRF24_REGADDR_RX_ADDR_P4, ((uint8_t *)(&config->address) + 4), 1);
+		nrf24_write_register(intf_ptr, NRF24_REGADDR_RX_ADDR_P4, ((uint8_t *)(&config->address) + 5), 1);
 		rx_pw = NRF24_REGADDR_RX_PW_P4;
 		break;
 	case 5:
-		nrf24_write_register(intf_ptr, NRF24_REGADDR_RX_ADDR_P5, ((uint8_t *)(&config->address) + 4), 1);
+		nrf24_write_register(intf_ptr, NRF24_REGADDR_RX_ADDR_P5, ((uint8_t *)(&config->address) + 5), 1);
 		rx_pw = NRF24_REGADDR_RX_PW_P5;
 		break;
 	}
