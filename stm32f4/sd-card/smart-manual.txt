@@ -1,0 +1,28 @@
+"""Автор этого мануала (1 манул, 2 манула) за непонятные объяснения и неработающий код ответственности не несёт"""
+
+
+#include "main.h"
+#include "fatfs.h"
+#include <stdio.h>
+
+int app_main(void)
+{
+	FATFS fileSystem; // переменная типа FATFS
+	FIL testFile; // хендлер файла
+	char testBuffer[16] = "TestTestTestTest"; // данные для записи
+	UINT testBytes; // количество символов, реально записанных внутрь файла
+	FRESULT res; // результат выполнения функции
+	if(f_mount(&fileSystem, SDPath, 1) == FR_OK) { // монтируете файловую систему по пути SDPath
+		uint8_t path[13] = "testfile.txt"; // название файла
+		path[12] = '\0'; // добавляем символ конца строки в конец строки
+		res = f_open(&testFile, (char*)path, FA_WRITE | FA_CREATE_ALWAYS); // открытие файла, обязательно для работы с ним
+		res = f_write(&testFile, (uint8_t*) testBuffer, sizeof(testBuffer), &testBytes); // запись в файл
+		res = f_read(&testFile, (uint8_t*) testBuffer, sizeof(testBuffer), &testBytes); // чтение из файла
+		res = f_close(&testFile); // закрытие файла после работы
+	}
+	return 0;
+}
+
+
+1) Нужен #include "fatfs.h"
+2) Смотрите комментарии к коду
