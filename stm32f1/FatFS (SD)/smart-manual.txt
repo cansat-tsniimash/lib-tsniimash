@@ -1,4 +1,4 @@
-"""Автор этого мануала (1 манул, 2 манула) за непонятные объяснения и неработающий код ответственности не несёт"""
+//Автор этого мануала за непонятные объяснения и неработающий код ответственности не несёт (как бы да, но вообще-то нет)
 
 
 #include "main.h"
@@ -12,11 +12,12 @@ int app_main(void)
 	char testBuffer[16] = "TestTestTestTest"; // данные для записи
 	UINT testBytes; // количество символов, реально записанных внутрь файла
 	FRESULT res; // результат выполнения функции
-	if(f_mount(&fileSystem, SDPath, 1) == FR_OK) { // монтируете файловую систему по пути SDPath
+	if(f_mount(&fileSystem, SDPath, 1) == FR_OK) { // монтируете файловую систему по пути SDPath, проверяете, что она смонтировалась, только при этом условии начинаете с ней работать
 		uint8_t path[13] = "testfile.txt"; // название файла
 		path[12] = '\0'; // добавляем символ конца строки в конец строки
 		res = f_open(&testFile, (char*)path, FA_WRITE | FA_CREATE_ALWAYS); // открытие файла, обязательно для работы с ним
-		res = f_write(&testFile, (uint8_t*) testBuffer, sizeof(testBuffer), &testBytes); // запись в файл
+		res = f_write(&testFile, (uint8_t*) testBuffer, sizeof(testBuffer), &testBytes); // отправка на запись в файл
+		res = f_sync(&testFile) // запись в файл (на sd контроллер пишет не сразу, а по закрытии файла. Также можно использовать эту команду)
 		res = f_read(&testFile, (uint8_t*) testBuffer, sizeof(testBuffer), &testBytes); // чтение из файла
 		res = f_close(&testFile); // закрытие файла после работы
 	}
@@ -24,5 +25,5 @@ int app_main(void)
 }
 
 
-1) Нужен #include "fatfs.h"
-2) Смотрите комментарии к коду
+/*1) Нужен #include "fatfs.h"
+2) Смотрите комментарии к коду*/
