@@ -5,7 +5,7 @@
 которые можно забрать в любое время
 
 
-Основная идея этого дрйвера заключается в том, что пользователь драйвера
+Основная идея этого драйвера заключается в том, что пользователь
 получает поток байтов из какого-нибудь канала и закидывает байтики в драйвер
 с помощью gps_push_byte. Эти байтики накапливаются во внутреннем кольцевом
 буфере. Чтобы он не переполнился, время от времени должна вызываться gps_work,
@@ -23,7 +23,7 @@ gps_init();
 while (1) {
     while (uart_has_data()) {
         uint8_t byte = uart_get_byte();
-        gps_push_byte(byte)
+        gps_push_byte(byte);
     }
     gps_work();
 
@@ -33,7 +33,7 @@ while (1) {
     int64_t cookie = 0;
     gps_get_coords(&cookie, &lon, &lat, &alt);
 
-    printf("Update count: %d Lon: %f Lat: %f Alt: ", cookie, lon, lat, alt);
+    printf("Update count: %d Lon: %f Lat: %f Alt: %f", cookie, lon, lat, alt);
 
     ...
 
