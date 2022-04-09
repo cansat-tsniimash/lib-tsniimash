@@ -1,8 +1,12 @@
+#include "stm32f1xx_hal.h"
+#ifdef HAL_FATFS_ENABLED
+
+
 #define TRUE  1
 #define FALSE 0
 #define bool BYTE
 
-#include "stm32f1xx_hal.h"
+
 #include "diskio.h"
 #include "../fatfs_sd.h"
 
@@ -547,3 +551,4 @@ DRESULT SD_disk_ioctl(BYTE drv, BYTE ctrl, void *buff)
 
 	return res;
 }
+#endif

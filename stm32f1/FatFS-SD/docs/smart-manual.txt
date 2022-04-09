@@ -25,5 +25,6 @@ int app_main(void)
 }
 
 
-/*1) Нужен #include "fatfs.h"
-2) Смотрите комментарии к коду*/
+1) Нужен #include "fatfs.h"
+3) В \Core\Inc\stm32f1xx_hal_conf.h в USER CODE Header дописать #define HAL_FATFS_ENABLED
+3) Смотрите комментарии к коду
