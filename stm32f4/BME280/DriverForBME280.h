@@ -24,6 +24,7 @@ struct bme_spi_intf
 {
 	GPIO_TypeDef  *GPIO_Port;
 	uint16_t GPIO_Pin;
+	SPI_HandleTypeDef* spi;
 };
 
 

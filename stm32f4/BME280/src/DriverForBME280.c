@@ -21,14 +21,14 @@ static BME280_INTF_RET_TYPE bme_spi_read(
 		uint8_t reg_addr, uint8_t * data, uint32_t data_len, void *intf_ptr
 )
 {
-	extern SPI_HandleTypeDef hspi1;
+
 
 	struct bme_spi_intf* spi_intf = intf_ptr;
 
 	HAL_GPIO_WritePin(spi_intf->GPIO_Port, spi_intf->GPIO_Pin, GPIO_PIN_RESET);
 	reg_addr |= (1 << 7);
-	HAL_SPI_Transmit(&hspi1, &reg_addr, 1, HAL_MAX_DELAY);
-	HAL_SPI_Receive(&hspi1, data, data_len, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(spi_intf->spi, &reg_addr, 1, HAL_MAX_DELAY);
+	HAL_SPI_Receive(spi_intf->spi, data, data_len, HAL_MAX_DELAY);
 	HAL_GPIO_WritePin(spi_intf->GPIO_Port, spi_intf->GPIO_Pin, GPIO_PIN_SET);
 
 	return 0;
@@ -46,8 +46,8 @@ static BME280_INTF_RET_TYPE bme_spi_write(
 
 	HAL_GPIO_WritePin(spi_intf->GPIO_Port, spi_intf->GPIO_Pin, GPIO_PIN_RESET);
 	reg_addr &= ~(1 << 7);
-	HAL_SPI_Transmit(&hspi1, &reg_addr, 1, HAL_MAX_DELAY);
-	HAL_SPI_Transmit(&hspi1, (uint8_t*)data, data_len, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(spi_intf->spi, &reg_addr, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(spi_intf->spi, (uint8_t*)data, data_len, HAL_MAX_DELAY);
 	HAL_GPIO_WritePin(spi_intf->GPIO_Port, spi_intf->GPIO_Pin, GPIO_PIN_SET);
 
 	return 0;
