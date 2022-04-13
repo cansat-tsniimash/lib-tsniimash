@@ -16,7 +16,7 @@
 
 #include "main.h"
 
-#ifdef HAL_SPI_MODULE_ENABLED
+#ifdef HAL_ADC_MODULE_ENABLED
 
 typedef struct {
 	// сопротивление резистора в делителе напряжения (R)

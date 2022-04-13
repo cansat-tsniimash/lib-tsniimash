@@ -74,7 +74,7 @@ void bme_init_default( struct bme280_dev *bme, struct bme_spi_intf* spi_intf)
 	// Настройка bme280 =-=-=-=-=-=-=-=-=-=-=-=-
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-	(*bme).intf_ptr = &spi_intf;
+	(*bme).intf_ptr = spi_intf;
 	(*bme).intf = BME280_SPI_INTF;
 	(*bme).read = bme_spi_read;
 	(*bme).write = bme_spi_write;
