@@ -39,7 +39,6 @@ static BME280_INTF_RET_TYPE bme_spi_write(
 		uint8_t reg_addr, const uint8_t * data, uint32_t data_len, void *intf_ptr
 )
 {
-	extern SPI_HandleTypeDef hspi1;
 
 	struct bme_spi_intf* spi_intf = intf_ptr;
 
