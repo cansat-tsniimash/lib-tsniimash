@@ -33,6 +33,20 @@ static int32_t lsm6ds3_read(void * intf_ptr, uint8_t reg_addr, uint8_t * data, u
 	return 0;
 }
 
+
+
+static int32_t lsmd6s3_write_sr(void * intf_ptr, uint8_t reg_addr, const uint8_t * data, uint16_t data_size)
+{
+	return 0;
+}
+
+
+static int32_t lsm6ds3_read_sr(void * intf_ptr, uint8_t reg_addr, uint8_t * data, uint16_t data_size)
+{
+	return 0;
+}
+
+
 void lsmset(stmdev_ctx_t *ctx, struct lsm_spi_intf *spi_interface)
 {
 	// Настройка lsm6ds3 =-=-=-=-=-=-=-=-=-=-=-=-
@@ -41,6 +55,28 @@ void lsmset(stmdev_ctx_t *ctx, struct lsm_spi_intf *spi_interface)
 		ctx->handle = spi_interface;
 		ctx->read_reg = lsm6ds3_read;
 		ctx->write_reg = lsmd6s3_write;
+
+		uint8_t whoami = 0x00;
+		lsm6ds3_device_id_get(ctx, &whoami);
+
+		lsm6ds3_reset_set(ctx, PROPERTY_ENABLE);
+		HAL_Delay(100);
+
+		lsm6ds3_xl_full_scale_set(ctx, LSM6DS3_16g);
+		lsm6ds3_xl_data_rate_set(ctx, LSM6DS3_XL_ODR_104Hz);
+
+		lsm6ds3_gy_full_scale_set(ctx, LSM6DS3_2000dps);
+		lsm6ds3_gy_data_rate_set(ctx, LSM6DS3_GY_ODR_104Hz);
+}
+
+void lsmset_sr(stmdev_ctx_t *ctx, struct lsm_spi_intf_sr *spi_interface)
+{
+	// Настройка lsm6ds3 =-=-=-=-=-=-=-=-=-=-=-=-
+		// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+		ctx->handle = spi_interface;
+		ctx->read_reg = lsm6ds3_read_sr;
+		ctx->write_reg = lsmd6s3_write_sr;
 
 		uint8_t whoami = 0x00;
 		lsm6ds3_device_id_get(ctx, &whoami);

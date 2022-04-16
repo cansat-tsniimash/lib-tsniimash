@@ -51,8 +51,20 @@ struct lsm_spi_intf
 		uint16_t GPIO_Pin;
 		SPI_HandleTypeDef* spi;
 };
+
+
+
+struct lsm_spi_intf_sr
+{
+		int sr_pin;
+		SPI_HandleTypeDef* spi;
+		//Shift reg device
+};
 //настройка и инициализация
 void lsmset(stmdev_ctx_t *ctx, 	struct lsm_spi_intf *spi_interface);
 //чтение данных
 void lsmread(stmdev_ctx_t *ctx, float *temperature_celsius_gyro, float (*acc_g)[3], float (*gyro_dps)[3]);
+
+
+void lsmset_sr(stmdev_ctx_t *ctx, struct lsm_spi_intf_sr *spi_interface);
 #endif
