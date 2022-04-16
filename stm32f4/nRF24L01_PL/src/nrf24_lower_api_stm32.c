@@ -13,9 +13,11 @@
 
 extern SPI_HandleTypeDef hspi2;
 
+
+
 static void _nrf24_CS(void * intf_ptr, bool mode)
 {
-	nrf24_lower_api_config_t *api_config = (nrf24_lower_api_config_t *)intf_ptr;
+	nrf24_spi_pins_t *api_config = (nrf24_spi_pins_t *)intf_ptr;
 	if (mode)
 	{
 		// Опускаем chip select для того, что бы начать общение с конкретным устройством.
@@ -29,6 +31,8 @@ static void _nrf24_CS(void * intf_ptr, bool mode)
 		HAL_Delay(100);
 	}
 }
+
+static void _nrf24_CS_sr(void * intf_ptr, bool mode);
 
 void nrf24_read_register(void * intf_ptr, uint8_t reg_addr, uint8_t * reg_data, size_t data_size)
 {
@@ -175,6 +179,12 @@ void nrf24_get_status(void * intf_ptr, uint8_t * status)
 void nrf24_ce_activate(void * intf_ptr, bool onoff)
 {
 	nrf24_lower_api_config_t *api_config = (nrf24_lower_api_config_t *)intf_ptr;
+	api_config->nrf24_CE(api_config->intf_ptr, onoff);
+}
+
+void _nrf24_CE(void * intf_ptr, bool onoff)
+{
+	nrf24_spi_pins_t *api_config = (nrf24_spi_pins_t *)intf_ptr;
 	if (onoff)
 	{
 		HAL_GPIO_WritePin(api_config->ce_port, api_config->ce_pin,  GPIO_PIN_SET);
@@ -183,6 +193,24 @@ void nrf24_ce_activate(void * intf_ptr, bool onoff)
 	{
 		HAL_GPIO_WritePin(api_config->ce_port, api_config->ce_pin, GPIO_PIN_RESET);
 	}
+}
+
+void _nrf24_CE_sr(void * intf_ptr, bool onoff);
+
+void nrf24_spi_init(nrf24_lower_api_config_t* nrf24, SPI_HandleTypeDef *hspi, nrf24_spi_pins_t* pins)
+{
+	nrf24->hspi = hspi;
+	nrf24->nrf24_CS = _nrf24_CS;
+	nrf24->nrf24_CE = _nrf24_CE;
+	nrf24->intf_ptr = pins;
+}
+
+void nrf24_spi_init_sr(nrf24_lower_api_config_t* nrf24, SPI_HandleTypeDef *hspi, nrf24_spi_pins_sr_t* pins)
+{
+	nrf24->hspi = hspi;
+	nrf24->nrf24_CS = _nrf24_CS_sr;
+	nrf24->nrf24_CE = _nrf24_CE_sr;
+	nrf24->intf_ptr = pins;
 }
 
 #endif /* HAL_SPI_MODULE_ENABLED */
