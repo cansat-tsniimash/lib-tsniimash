@@ -15,6 +15,6 @@ struct lis_spi_intf
 
 
 
-void lisset();
-void lisread();
+void lisset(stmdev_ctx_t *ctx);
+void lisread(stmdev_ctx_t *ctx, float *temperature_celsius_mag, float (*mag)[3]);
 #endif

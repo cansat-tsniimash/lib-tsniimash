@@ -33,11 +33,12 @@ static int32_t lsm6ds3_read(void * intf_ptr, uint8_t reg_addr, uint8_t * data, u
 	return 0;
 }
 
-void lsmset(stmdev_ctx_t *ctx)
+void lsmset(stmdev_ctx_t *ctx, struct lsm_spi_intf *spi_interface)
 {
 	// Настройка lsm6ds3 =-=-=-=-=-=-=-=-=-=-=-=-
 		// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-		ctx->handle = NULL;
+
+		ctx->handle = spi_interface;
 		ctx->read_reg = lsm6ds3_read;
 		ctx->write_reg = lsmd6s3_write;
 
@@ -53,22 +54,22 @@ void lsmset(stmdev_ctx_t *ctx)
 		lsm6ds3_gy_full_scale_set(ctx, LSM6DS3_2000dps);
 		lsm6ds3_gy_data_rate_set(ctx, LSM6DS3_GY_ODR_104Hz);
 }
-void lsmread(stmdev_ctx_t *ctx, float temperature_celsius_gyro, float acc_g[3], float gyro_dps[3])
+void lsmread(stmdev_ctx_t *ctx, float *temperature_celsius_gyro, float (*acc_g)[3], float (*gyro_dps)[3])
 {
 	// Чтение данных из lsm6ds3
 		// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-		int16_t temperature_raw_gyro;
-		int16_t acc_raw[3];
-		int16_t gyro_raw[3];
+		int16_t temperature_raw_gyro = {0};
+		int16_t acc_raw[3] = {0};
+		int16_t gyro_raw[3] = {0};
 		lsm6ds3_temperature_raw_get(ctx, &temperature_raw_gyro);
 		lsm6ds3_acceleration_raw_get(ctx, acc_raw);
 		lsm6ds3_angular_rate_raw_get(ctx, gyro_raw);
 
 		// Пересчет из попугаев в человеческие величины
-		temperature_celsius_gyro = lsm6ds3_from_lsb_to_celsius(temperature_raw_gyro);
+		*temperature_celsius_gyro = lsm6ds3_from_lsb_to_celsius(temperature_raw_gyro);
 		for (int i = 0; i < 3; i++)
 		{
-			acc_g[i] = lsm6ds3_from_fs16g_to_mg(acc_raw[i]) / 1000;
-			gyro_dps[i] = lsm6ds3_from_fs2000dps_to_mdps(gyro_raw[i]) / 1000;
+			(*acc_g)[i] = lsm6ds3_from_fs16g_to_mg(acc_raw[i]) / 1000;
+			(*gyro_dps)[i] = lsm6ds3_from_fs2000dps_to_mdps(gyro_raw[i]) / 1000;
 		}
 }
