@@ -1,4 +1,5 @@
 #include "shift_reg.h"
+#ifdef HAL_SPI_MODULE_ENABLED
 
 void shift_reg_init(shift_reg_t *this) {
 	HAL_GPIO_WritePin(this->latch_port, this->latch_pin, GPIO_PIN_RESET);
@@ -50,3 +51,5 @@ void shift_reg_write_bit_16(shift_reg_t *this, uint16_t pos, bool onoff) {
 	tmp_buffer = tmp_buffer | ((onoff ? 1 : 0) << pos);
 	shift_reg_write_16(this, tmp_buffer);
 }
+
+#endif /* HAL_SPI_MODULE_ENABLED */

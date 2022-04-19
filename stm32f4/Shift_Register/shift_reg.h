@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <stm32f4xx_hal.h>
 
+#ifdef HAL_SPI_MODULE_ENABLED
+
 //Так выглядит дескриптор сдвигового регистра
 struct shift_reg_t {
 	SPI_HandleTypeDef *bus; // Хэндлер шины SPI
@@ -33,4 +35,5 @@ void shift_reg_write_bit_8(shift_reg_t *this, uint8_t pos, bool onoff);
 // Функция для вставки нужного бита в два байта на позицию pos
 void shift_reg_write_bit_16(shift_reg_t *this, uint16_t pos, bool onoff);
 
+#endif /* HAL_SPI_MODULE_ENABLED */
 #endif /* SHIFT_REG_H_ */
