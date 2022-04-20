@@ -2,9 +2,10 @@
 #include "lis3mdl_reg.h"
 
 #include <stm32f4xx_hal.h>
-extern SPI_HandleTypeDef hspi1;
 
 #ifdef HAL_SPI_MODULE_ENABLED
+extern SPI_HandleTypeDef hspi1;
+
 
 struct lis_spi_intf
 {

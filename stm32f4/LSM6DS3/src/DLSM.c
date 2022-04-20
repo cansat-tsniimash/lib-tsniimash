@@ -2,6 +2,9 @@
 #include "..\lsm6ds3_reg.h"
 #include "..\DLSM.h"
 #include <stm32f4xx_hal.h>
+
+
+#ifdef HAL_SPI_MODULE_ENABLED
 extern SPI_HandleTypeDef hspi1;
 
 static int32_t lsmd6s3_write(void * intf_ptr, uint8_t reg_addr, const uint8_t * data, uint16_t data_size)
@@ -109,3 +112,4 @@ void lsmread(stmdev_ctx_t *ctx, float *temperature_celsius_gyro, float (*acc_g)[
 			(*gyro_dps)[i] = lsm6ds3_from_fs2000dps_to_mdps(gyro_raw[i]) / 1000;
 		}
 }
+#endif
