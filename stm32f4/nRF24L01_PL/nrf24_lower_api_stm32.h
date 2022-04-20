@@ -36,5 +36,8 @@ typedef struct nrf24_spi_pins_sr_t
 	uint8_t pos_CS;
 } nrf24_spi_pins_sr_t;
 
+void nrf24_spi_init(nrf24_lower_api_config_t* nrf24, SPI_HandleTypeDef *hspi, nrf24_spi_pins_t* pins);
+void nrf24_spi_init_sr(nrf24_lower_api_config_t* nrf24, SPI_HandleTypeDef *hspi, nrf24_spi_pins_sr_t* pins);
+
 #endif /* HAL_SPI_MODULE_ENABLED */
 #endif /* NRF24L01_PL_SRC_NRF24_LOWER_API_STM32_H_ */
