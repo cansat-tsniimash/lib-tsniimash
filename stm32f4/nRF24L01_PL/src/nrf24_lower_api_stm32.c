@@ -22,17 +22,21 @@ static void _nrf24_CS(void * intf_ptr, bool mode)
 	{
 		// Опускаем chip select для того, что бы начать общение с конкретным устройством.
 		HAL_GPIO_WritePin(api_config->cs_port, api_config->cs_pin,  GPIO_PIN_RESET);
-		HAL_Delay(11);
+		//HAL_Delay(11);
 	}
 	else
 	{
 		// Поднимаем chip select для того, что бы закончить общение с конкретным устройством.
 		HAL_GPIO_WritePin(api_config->cs_port, api_config->cs_pin,  GPIO_PIN_SET);
-		HAL_Delay(100);
+		//HAL_Delay(100);
 	}
 }
 
-static void _nrf24_CS_sr(void * intf_ptr, bool mode);
+static void _nrf24_CS_sr(void * intf_ptr, bool mode)
+{
+	nrf24_spi_pins_sr_t *api_config = (nrf24_spi_pins_sr_t *)intf_ptr;
+	shift_reg_write_bit_8(api_config->this, api_config->pos_CS, !mode);
+}
 
 void nrf24_read_register(void * intf_ptr, uint8_t reg_addr, uint8_t * reg_data, size_t data_size)
 {
@@ -195,7 +199,11 @@ void _nrf24_CE(void * intf_ptr, bool onoff)
 	}
 }
 
-void _nrf24_CE_sr(void * intf_ptr, bool onoff);
+void _nrf24_CE_sr(void * intf_ptr, bool onoff)
+{
+	nrf24_spi_pins_sr_t *api_config = (nrf24_spi_pins_sr_t *)intf_ptr;
+	shift_reg_write_bit_8(api_config->this, api_config->pos_CE, onoff);
+}
 
 void nrf24_spi_init(nrf24_lower_api_config_t* nrf24, SPI_HandleTypeDef *hspi, nrf24_spi_pins_t* pins)
 {

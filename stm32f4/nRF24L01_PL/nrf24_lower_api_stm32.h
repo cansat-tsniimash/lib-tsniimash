@@ -1,6 +1,7 @@
 #ifndef NRF24L01_PL_SRC_NRF24_LOWER_API_STM32_H_
 #define NRF24L01_PL_SRC_NRF24_LOWER_API_STM32_H_
 
+#include "../Shift_Register/shift_reg.h"
 #include <stm32f4xx_hal.h>
 #ifdef HAL_SPI_MODULE_ENABLED
 
@@ -28,8 +29,11 @@ typedef struct nrf24_spi_pins_t
 // Структура, содержащая параметры SPI пинов  Chip Enab и SPI Chip Select для сдвигового регистра
 typedef struct nrf24_spi_pins_sr_t
 {
+	shift_reg_t *this;
 	// Настройки Chip Enab
+	uint8_t pos_CE;
 	// Настройки SPI Chip Select
+	uint8_t pos_CS;
 } nrf24_spi_pins_sr_t;
 
 #endif /* HAL_SPI_MODULE_ENABLED */
