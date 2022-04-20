@@ -31,6 +31,9 @@ static int64_t time_cookie;
 static uint64_t time_s;
 static uint32_t time_us;
 
+static struct minmea_sentence_gga gga;
+
+
 static uint16_t schetchik = 0;
 
 
@@ -38,6 +41,7 @@ static uint16_t schetchik = 0;
 
 static bool cb_push(uint8_t byte)
 {
+
 	size_t next_head = uart_buffer_head + 1;
 	if (next_head >= sizeof(uart_buffer) / sizeof(uart_buffer[0]))
 		next_head = 0;
@@ -216,5 +220,12 @@ int gps_get_time(int64_t * cookie, uint64_t * time_s_, uint32_t * time_us_)
 	*cookie = time_cookie;
 	*time_s_ = time_s;
 	*time_us_ = time_us;
+	return 0;
+}
+
+int gps_get_gga(int64_t * cookie, struct minmea_sentence_gga * gga_)
+{
+	*cookie = time_cookie;
+	*gga_ = gga;
 	return 0;
 }

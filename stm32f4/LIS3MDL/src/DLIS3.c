@@ -2,6 +2,8 @@
 #include "..\lis3mdl_reg.h"
 #include "..\DLIS3.h"
 #include <stm32f4xx_hal.h>
+
+#ifdef HAL_SPI_MODULE_ENABLED
 extern SPI_HandleTypeDef hspi1;
 
 
@@ -84,3 +86,4 @@ void lisread(stmdev_ctx_t *ctx, float *temperature_celsius_mag, float (*mag)[3])
 	for (int i = 0; i < 3; i++)
 		(*mag)[i] = lis3mdl_from_fs16_to_gauss(mag_raw[i]);
 }
+#endif
