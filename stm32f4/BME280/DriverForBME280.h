@@ -29,6 +29,15 @@ struct bme_spi_intf
 
 
 
+struct bme_spi_intf_sr
+{
+	int sp_pin;
+	SPI_HandleTypeDef* spi;
+	//Shift reg device
+};
+
+
+
 /*
  * Создаёт дефолтные настройки, которые написал я и немцы, которые придумали датчик
  * spi_intf - настройка интерфейса SPI
@@ -37,4 +46,8 @@ void bme_init_default( struct bme280_dev *bme, struct bme_spi_intf* spi_intf);
 
 // Чтение данных с БМЕ280, может возвращать давление, влажность и температуру
 struct bme280_data bme_read_data(struct bme280_dev *bme);
+
+
+
+void bme_init_default_sr( struct bme280_dev *bme, struct bme_spi_intf_sr* spi_intf);
 #endif

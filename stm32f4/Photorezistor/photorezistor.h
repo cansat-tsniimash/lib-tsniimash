@@ -16,6 +16,8 @@
 
 #include "main.h"
 
+#ifdef HAL_ADC_MODULE_ENABLED
+
 typedef struct {
 	// сопротивление резистора в делителе напряжения (R)
 	float resist;
@@ -25,3 +27,5 @@ typedef struct {
  * переводим из показателей фоторезистора в люксы
  */
 float photorezistor_get_lux(photorezistor_t);
+
+#endif
