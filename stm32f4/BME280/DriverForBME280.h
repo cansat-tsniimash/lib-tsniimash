@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include "bme280.h"
+#include "..\Shift_Register\shift_reg.h"
 
 
 
@@ -31,11 +32,12 @@ struct bme_spi_intf
 
 struct bme_spi_intf_sr
 {
-	int sp_pin;
+	int sr_pin;
 	SPI_HandleTypeDef* spi;
 	//Shift reg device
+	shift_reg_t *sr;
 };
-
+typedef struct bme_spi_intf_sr bme_spi_intf_sr;
 
 
 /*
