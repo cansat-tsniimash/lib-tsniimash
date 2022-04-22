@@ -38,6 +38,7 @@ int app_main()
 
 #include <stdio.h>
 #include "lsm6ds3_reg.h"
+#include "..\Shift_Register\shift_reg.h"
 
 #include <stm32f4xx_hal.h>
 
@@ -59,6 +60,7 @@ struct lsm_spi_intf_sr
 		int sr_pin;
 		SPI_HandleTypeDef* spi;
 		//Shift reg device
+		shift_reg_t *sr;
 };
 //настройка и инициализация
 void lsmset(stmdev_ctx_t *ctx, 	struct lsm_spi_intf *spi_interface);
