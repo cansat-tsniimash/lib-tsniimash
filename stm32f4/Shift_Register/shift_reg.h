@@ -8,15 +8,14 @@
 #ifdef HAL_SPI_MODULE_ENABLED
 
 //Так выглядит дескриптор сдвигового регистра
-struct shift_reg_t {
+typedef struct {
 	SPI_HandleTypeDef *bus; // Хэндлер шины SPI
 	GPIO_TypeDef *latch_port; // Порт Latch-а, например, GPIOA, GPIOB, etc
 	uint16_t latch_pin; // Маска Latch-а, например, GPIO_Pin_1, GPIO_Pin_2, etc
 	GPIO_TypeDef *oe_port; // Порт OE, например, GPIOA, GPIOB, etc
 	uint16_t oe_pin; // Маска OE, например, GPIO_Pin_1, GPIO_Pin_2, etc
 	uint16_t value; // Текущее состояние сдвигового регистра
-};
-typedef struct shift_reg_t shift_reg_t;
+} shift_reg_t;
 
 // Инициализация шифт регистра, передаём дескриптор сдвигового регистра
 void shift_reg_init(shift_reg_t *this);

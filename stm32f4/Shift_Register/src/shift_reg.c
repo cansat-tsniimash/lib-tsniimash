@@ -1,4 +1,4 @@
-#include "shift_reg.h"
+#include "../shift_reg.h"
 #ifdef HAL_SPI_MODULE_ENABLED
 
 void shift_reg_init(shift_reg_t *this) {
