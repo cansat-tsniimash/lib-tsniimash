@@ -62,6 +62,7 @@ struct lsm_spi_intf_sr
 		//Shift reg device
 		shift_reg_t *sr;
 };
+typedef struct lsm_spi_intf_sr lsm_spi_intf_sr;
 //настройка и инициализация
 void lsmset(stmdev_ctx_t *ctx, 	struct lsm_spi_intf *spi_interface);
 //чтение данных
