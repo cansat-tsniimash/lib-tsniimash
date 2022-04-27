@@ -27,6 +27,14 @@ void shift_reg_latch(shift_reg_t *this) {
 	HAL_GPIO_WritePin(this->latch_port, this->latch_pin, GPIO_PIN_RESET);
 }
 
+void shift_reg_oe(shift_reg_t *this, bool onoff) {
+	if (onoff) {
+		HAL_GPIO_WritePin(this->latch_port, this->latch_pin, GPIO_PIN_SET);
+	} else if (!onoff) {
+		HAL_GPIO_WritePin(this->latch_port, this->latch_pin, GPIO_PIN_RESET);
+	}
+}
+
 void shift_reg_write_8(shift_reg_t *this, uint8_t buffer) {
 	HAL_SPI_Transmit(this->bus, &buffer, 1, HAL_MAX_DELAY);
 	this->value = (this->value << 8) | buffer;
