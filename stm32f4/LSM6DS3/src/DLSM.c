@@ -48,7 +48,10 @@ static int32_t lsmd6s3_write_sr(void * intf_ptr, uint8_t reg_addr, const uint8_t
 	shift_reg_write_bit_16(spi_intf->sr, spi_intf->sr_pin, 0);
 	HAL_SPI_Transmit(spi_intf->spi, &reg_addr, 1, HAL_MAX_DELAY);
 	HAL_SPI_Transmit(spi_intf->spi, (uint8_t*)data, data_size, HAL_MAX_DELAY);
+	shift_reg_oe(spi_intf->sr, 1);
 	shift_reg_write_bit_16  (spi_intf->sr, spi_intf->sr_pin, 1);
+	shift_reg_oe(spi_intf->sr, 0);
+
 	return 0;
 }
 
@@ -58,12 +61,16 @@ static int32_t lsm6ds3_read_sr(void * intf_ptr, uint8_t reg_addr, uint8_t * data
 	struct lsm_spi_intf_sr* spi_intf = intf_ptr;
 
 
-	reg_addr=reg_addr&~(1<<7);
+	reg_addr=reg_addr|(1<<7);
 
 	shift_reg_write_bit_16  (spi_intf->sr, spi_intf->sr_pin, 0);
 	HAL_SPI_Transmit(spi_intf->spi, &reg_addr, 1, HAL_MAX_DELAY);
-	HAL_SPI_Transmit(spi_intf->spi, (uint8_t*)data, data_size, HAL_MAX_DELAY);
+	HAL_SPI_Receive(spi_intf->spi, (uint8_t*)data, data_size, HAL_MAX_DELAY);
+	shift_reg_oe(spi_intf->sr, 1);
 	shift_reg_write_bit_16  (spi_intf->sr, spi_intf->sr_pin, 1);
+	shift_reg_oe(spi_intf->sr, 0);
+
+
 	return 0;
 }
 

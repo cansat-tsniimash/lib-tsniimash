@@ -78,7 +78,9 @@ static BME280_INTF_RET_TYPE bme_spi_read_sr(
 	reg_addr |= (1 << 7);
 	HAL_SPI_Transmit(spi_intf->spi, &reg_addr, 1, HAL_MAX_DELAY);
 	HAL_SPI_Receive(spi_intf->spi, data, data_len, HAL_MAX_DELAY);
+	shift_reg_oe(spi_intf->sr, 1);
 	shift_reg_write_bit_16(spi_intf->sr, spi_intf->sr_pin, 1);
+	shift_reg_oe(spi_intf->sr, 0);
 
 	return 0;
 }
@@ -96,7 +98,10 @@ static BME280_INTF_RET_TYPE bme_spi_write_sr(
 	reg_addr &= ~(1 << 7);
 	HAL_SPI_Transmit(spi_intf->spi, &reg_addr, 1, HAL_MAX_DELAY);
 	HAL_SPI_Transmit(spi_intf->spi, (uint8_t*)data, data_len, HAL_MAX_DELAY);
+	shift_reg_oe(spi_intf->sr, 1);
 	shift_reg_write_bit_16(spi_intf->sr, spi_intf->sr_pin, 1);
+	shift_reg_oe(spi_intf->sr, 0);
+
 
 	return 0;
 }
