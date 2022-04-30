@@ -17,7 +17,7 @@ int app_main(void)
 		path[12] = '\0'; // добавляем символ конца строки в конец строки
 		res = f_open(&testFile, (char*)path, FA_WRITE | FA_CREATE_ALWAYS); // открытие файла, обязательно для работы с ним
 		res = f_write(&testFile, (uint8_t*) testBuffer, sizeof(testBuffer), &testBytes); // отправка на запись в файл
-		res = f_sync(&testFile) // запись в файл (на sd контроллер пишет не сразу, а по закрытии файла. Также можно использовать эту команду)
+		res = f_sync(&testFile); // запись в файл (на sd контроллер пишет не сразу, а по закрытии файла. Также можно использовать эту команду)
 		res = f_read(&testFile, (uint8_t*) testBuffer, sizeof(testBuffer), &testBytes); // чтение из файла
 		res = f_close(&testFile); // закрытие файла после работы
 	}

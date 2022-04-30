@@ -30,7 +30,7 @@ void shift_reg_latch(shift_reg_t *this) {
 void shift_reg_oe(shift_reg_t *this, bool onoff) {
 	if (onoff) {
 		HAL_GPIO_WritePin(this->oe_port, this->oe_pin, GPIO_PIN_SET);
-	} else if (!onoff) {
+	} else {
 		HAL_GPIO_WritePin(this->oe_port, this->oe_pin, GPIO_PIN_RESET);
 	}
 }
