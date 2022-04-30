@@ -37,7 +37,16 @@ static void _nrf24_CS_sr(void * intf_ptr, bool mode)
 {
 	nrf24_lower_api_config_t *api_config = (nrf24_lower_api_config_t *)intf_ptr;
 	nrf24_spi_pins_sr_t *api_config_low = (nrf24_spi_pins_sr_t *)api_config->intf_ptr;
-	shift_reg_write_bit_8(api_config_low->this, api_config_low->pos_CS, !mode);
+	if (!mode)
+	{
+		shift_reg_oe(api_config_low->this, true);
+		shift_reg_write_bit_8(api_config_low->this, api_config_low->pos_CS, !mode);
+		shift_reg_oe(api_config_low->this, false);
+	}
+	else
+	{
+		shift_reg_write_bit_8(api_config_low->this, api_config_low->pos_CS, !mode);
+	}
 }
 
 void nrf24_read_register(void * intf_ptr, uint8_t reg_addr, uint8_t * reg_data, size_t data_size)
