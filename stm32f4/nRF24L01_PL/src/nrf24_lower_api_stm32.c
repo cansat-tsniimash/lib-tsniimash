@@ -195,7 +195,7 @@ void nrf24_get_status(void * intf_ptr, uint8_t * status)
 void nrf24_ce_activate(void * intf_ptr, bool onoff)
 {
 	nrf24_lower_api_config_t *api_config = (nrf24_lower_api_config_t *)intf_ptr;
-	api_config->nrf24_CE(api_config->intf_ptr, onoff);
+	api_config->nrf24_CE(intf_ptr, onoff);
 }
 
 void _nrf24_CE(void * intf_ptr, bool onoff)
