@@ -166,7 +166,7 @@ int nrf24_pipe_rx_start(void * intf_ptr, uint8_t pipe_no, const nrf24_pipe_confi
 // Выключение принимающего пайпа
 /* Аргументы:
    intf_ptr - указатель, который передается функциям lower_api
-   pipe_no - номер пайпа от 0 до 5(андрей бабижон)
+   pipe_no - номер пайпа от 0 до 5
 
    Если все хорошо, возвращает 0. Если плохо - вернет что-то другое */
 int nrf24_pipe_rx_stop(void * intf_ptr, uint8_t pipe_no);
@@ -201,7 +201,7 @@ int nrf24_mode_power_down(void * intf_ptr);
 int nrf24_mode_standby(void * intf_ptr);
 
 
-// Переключение радио в режим передачи
+// Переключение радио в режим приёма
 /* Аргументы:
    intf_ptr - указатель, который передается функциям lower_api
 
@@ -209,7 +209,7 @@ int nrf24_mode_standby(void * intf_ptr);
 int nrf24_mode_tx(void * intf_ptr);
 
 
-// Переключение радио в режим приёма
+// Переключение радио в режим передачи
 /* Аргументы:
    intf_ptr - указатель, который передается функциям lower_api
 

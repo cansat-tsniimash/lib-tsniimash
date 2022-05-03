@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "..\bme280.h"
 #include "..\DriverForBME280.h"
+#include "..\..\Shift_Register\shift_reg.h"
 
 
 
@@ -71,13 +72,15 @@ static BME280_INTF_RET_TYPE bme_spi_read_sr(
 {
 
 
-	struct bme_spi_intf* spi_intf = intf_ptr;
+	struct bme_spi_intf_sr* spi_intf = intf_ptr;
 
-	HAL_GPIO_WritePin(spi_intf->GPIO_Port, spi_intf->GPIO_Pin, GPIO_PIN_RESET);
+	shift_reg_write_bit_16  (spi_intf->sr, spi_intf->sr_pin, 0);
 	reg_addr |= (1 << 7);
 	HAL_SPI_Transmit(spi_intf->spi, &reg_addr, 1, HAL_MAX_DELAY);
 	HAL_SPI_Receive(spi_intf->spi, data, data_len, HAL_MAX_DELAY);
-	HAL_GPIO_WritePin(spi_intf->GPIO_Port, spi_intf->GPIO_Pin, GPIO_PIN_SET);
+	shift_reg_oe(spi_intf->sr, 1);
+	shift_reg_write_bit_16(spi_intf->sr, spi_intf->sr_pin, 1);
+	shift_reg_oe(spi_intf->sr, 0);
 
 	return 0;
 }
@@ -88,14 +91,17 @@ static BME280_INTF_RET_TYPE bme_spi_write_sr(
 )
 {
 
-	struct bme_spi_intf* spi_intf = intf_ptr;
+	struct bme_spi_intf_sr* spi_intf = intf_ptr;
 
 
-	HAL_GPIO_WritePin(spi_intf->GPIO_Port, spi_intf->GPIO_Pin, GPIO_PIN_RESET);
+	shift_reg_write_bit_16(spi_intf->sr, spi_intf->sr_pin, 0);
 	reg_addr &= ~(1 << 7);
 	HAL_SPI_Transmit(spi_intf->spi, &reg_addr, 1, HAL_MAX_DELAY);
 	HAL_SPI_Transmit(spi_intf->spi, (uint8_t*)data, data_len, HAL_MAX_DELAY);
-	HAL_GPIO_WritePin(spi_intf->GPIO_Port, spi_intf->GPIO_Pin, GPIO_PIN_SET);
+	shift_reg_oe(spi_intf->sr, 1);
+	shift_reg_write_bit_16(spi_intf->sr, spi_intf->sr_pin, 1);
+	shift_reg_oe(spi_intf->sr, 0);
+
 
 	return 0;
 }
@@ -123,9 +129,9 @@ void bme_init_default( struct bme280_dev *bme, struct bme_spi_intf* spi_intf)
 
 	(*bme).intf_ptr = spi_intf;
 	(*bme).intf = BME280_SPI_INTF;
-	(*bme).read = bme_spi_read_sr;
-	(*bme).write = bme_spi_write_sr;
-	(*bme).delay_us = bme_delay_us_sr;
+	(*bme).read = bme_spi_read;
+	(*bme).write = bme_spi_write;
+	(*bme).delay_us = bme_delay_us;
 
     bme280_soft_reset(bme);
 
@@ -158,9 +164,9 @@ void bme_init_default_sr( struct bme280_dev *bme, struct bme_spi_intf_sr* spi_in
 
 	(*bme).intf_ptr = spi_intf;
 	(*bme).intf = BME280_SPI_INTF;
-	(*bme).read = bme_spi_read;
-	(*bme).write = bme_spi_write;
-	(*bme).delay_us = bme_delay_us;
+	(*bme).read = bme_spi_read_sr;
+	(*bme).write = bme_spi_write_sr;
+	(*bme).delay_us = bme_delay_us_sr;
 
     bme280_soft_reset(bme);
 
