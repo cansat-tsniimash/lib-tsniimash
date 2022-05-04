@@ -27,7 +27,7 @@ void shift_reg_latch(shift_reg_t *this) {
 	HAL_GPIO_WritePin(this->latch_port, this->latch_pin, GPIO_PIN_RESET);
 }
 
-void shift_reg_oe(shift_reg_t *this, bool onoff) {
+void shift_reg_oe(shift_reg_t *this, bool onoff) { // true значит выключить, false - включить
 	if (onoff) {
 		HAL_GPIO_WritePin(this->oe_port, this->oe_pin, GPIO_PIN_SET);
 	} else {
