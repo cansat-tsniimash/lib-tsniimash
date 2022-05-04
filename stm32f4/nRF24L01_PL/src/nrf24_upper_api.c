@@ -138,6 +138,8 @@ int nrf24_pipe_rx_start(void * intf_ptr, uint8_t pipe_no, const nrf24_pipe_confi
 	}
 	else
 	{
+		uint8_t pld_size = 32; // Нужно записать не 0, чтобы пайп в целом работал
+		nrf24_write_register(intf_ptr, rx_pw, &pld_size, 1);
 		dynpd |= (1 << pipe_no);
 	}
 	nrf24_write_register(intf_ptr, NRF24_REGADDR_DYNPD, &dynpd, 1);
