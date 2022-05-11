@@ -6,7 +6,7 @@
 
 int dwt_delay_init(void)
 {
-    static reinit_defence = 0;
+    static uint8_t reinit_defence = 0;
     if (reinit_defence) {
     	return 1; /*clock cycle counter not started*/
     }
