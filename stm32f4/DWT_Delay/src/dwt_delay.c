@@ -6,7 +6,11 @@
 
 int dwt_delay_init(void)
 {
-    /* Disable TRC */
+    static reinit_defence = 0;
+    if (reinit_defence) {
+    	return 1; /*clock cycle counter not started*/
+    }
+	/* Disable TRC */
     CoreDebug->DEMCR &= ~CoreDebug_DEMCR_TRCENA_Msk; // ~0x01000000;
     /* Enable TRC */
     CoreDebug->DEMCR |=  CoreDebug_DEMCR_TRCENA_Msk; // 0x01000000;
@@ -25,10 +29,12 @@ int dwt_delay_init(void)
     __ASM volatile ("NOP");
 
     /* Check if clock cycle counter has started */
-    if(DWT->CYCCNT)
-       return 0; /*clock cycle counter started*/
-    else
-      return 1; /*clock cycle counter not started*/
+    if(DWT->CYCCNT) {
+    	reinit_defence = 1;
+    	return 0; /*clock cycle counter started*/
+    } else {
+    	return 1; /*clock cycle counter not started*/
+    }
 }
 
 

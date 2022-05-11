@@ -21,7 +21,7 @@ void shift_reg_push_16(shift_reg_t *this, uint16_t buffer) {
 void shift_reg_latch(shift_reg_t *this) {
 	HAL_GPIO_WritePin(this->latch_port, this->latch_pin, GPIO_PIN_SET);
 
-	/* to do: Asm */
+	/* TODO: Asm */
 	HAL_Delay(1);
 
 	HAL_GPIO_WritePin(this->latch_port, this->latch_pin, GPIO_PIN_RESET);
