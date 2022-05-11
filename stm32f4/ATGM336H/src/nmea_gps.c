@@ -110,7 +110,6 @@ int gps_init()
 	uart_buffer_tail = 0;
 	pavel_gps_sost = 0;
 
-	//pavel_gps_buffer
 	pavel_gps_carret = 0;
 	return 0;
 }
