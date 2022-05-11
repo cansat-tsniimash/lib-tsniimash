@@ -39,13 +39,83 @@ static int32_t lis3mdl_read(void * intf_ptr, uint8_t reg_addr, uint8_t * data, u
 
 
 
-void lisset(stmdev_ctx_t *ctx)
+void lisset(stmdev_ctx_t *ctx, struct lis_spi_intf *spi_interface)
 {
 // Настройка lismdl =-=-=-=-=-=-=-=-=-=-=-=-
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	ctx->handle = NULL;
 	ctx->read_reg = lis3mdl_read;
 	ctx->write_reg = lis3mdl_write;
+
+	// Это придется делать прямо сразу еще до всего
+	// так как иначе он с ним общаться не сможет (судя по доке по-крайней мере)
+	lis3mdl_spi_mode_set(ctx, LIS3MDL_SPI_3_WIRE);
+
+	uint8_t whoami_mag = 0x00;
+	lis3mdl_device_id_get(ctx, &whoami_mag);
+
+	// Убедились что датчик тот который нам нужен
+	// Сбросим его
+	lis3mdl_reset_set(ctx, PROPERTY_ENABLE);
+	HAL_Delay(100);
+
+	// Настраиваем
+	// Обновление данных только целыми порциями
+	lis3mdl_block_data_update_set(ctx, PROPERTY_ENABLE);
+	// Без экономии энергии
+	lis3mdl_fast_low_power_set(ctx, PROPERTY_DISABLE);
+	// Диапазон измерения (внимание LSM303 умеет только 16G)
+	lis3mdl_full_scale_set(ctx, LIS3MDL_16_GAUSS);
+	// Частота опроса
+	// внимание для LSM303 запрещены значения
+	// LIS3MDL_LP_1kHz, LIS3MDL_MP_560Hz, LIS3MDL_HP_300Hz, LIS3MDL_UHP_155Hz
+	lis3mdl_data_rate_set(ctx, LIS3MDL_UHP_80Hz);
+	// Включаем температурный сенсор
+	lis3mdl_temperature_meas_set(ctx, PROPERTY_ENABLE);
+	// режим работы
+	lis3mdl_operating_mode_set(ctx, LIS3MDL_CONTINUOUS_MODE);
+}
+
+static int32_t lis3mdl_write_sr(void * intf_ptr, uint8_t reg_addr, const uint8_t * data, uint16_t data_size)
+{
+
+	struct lis_spi_intf_sr* spi_intf = intf_ptr;
+
+	reg_addr=reg_addr&~(1<<7);
+	reg_addr=reg_addr|(1<<6);
+
+	shift_reg_write_bit_16(spi_intf->sr, spi_intf->sr_pin, 0);
+	HAL_SPI_Transmit(spi_intf->spi, &reg_addr, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(spi_intf->spi, (uint8_t*)data, data_size, HAL_MAX_DELAY);
+	shift_reg_oe(spi_intf->sr, 1);
+	shift_reg_write_bit_16  (spi_intf->sr, spi_intf->sr_pin, 1);
+	shift_reg_oe(spi_intf->sr, 0);
+	return 0;
+}
+
+static int32_t lis3mdl_read_sr(void * intf_ptr, uint8_t reg_addr, uint8_t * data, uint16_t data_size)
+{
+	struct lis_spi_intf_sr* spi_intf = intf_ptr;
+
+	reg_addr=reg_addr|(1<<7);
+	reg_addr=reg_addr|(1<<6);
+
+	shift_reg_write_bit_16  (spi_intf->sr, spi_intf->sr_pin, 0);
+	HAL_SPI_Transmit(spi_intf->spi, &reg_addr, 1, HAL_MAX_DELAY);
+	HAL_SPI_Receive(spi_intf->spi, data, data_size, HAL_MAX_DELAY);
+	shift_reg_oe(spi_intf->sr, 1);
+	shift_reg_write_bit_16  (spi_intf->sr, spi_intf->sr_pin, 1);
+	shift_reg_oe(spi_intf->sr, 0);
+	return 0;
+}
+
+void lisset_sr(stmdev_ctx_t *ctx, struct lis_spi_intf_sr *spi_interface)
+{
+// Настройка lismdl =-=-=-=-=-=-=-=-=-=-=-=-
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	ctx->handle = NULL;
+	ctx->read_reg = lis3mdl_read_sr;
+	ctx->write_reg = lis3mdl_write_sr;
 
 	// Это придется делать прямо сразу еще до всего
 	// так как иначе он с ним общаться не сможет (судя по доке по-крайней мере)

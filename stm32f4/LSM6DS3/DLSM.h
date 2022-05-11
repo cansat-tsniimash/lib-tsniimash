@@ -38,7 +38,7 @@ int app_main()
 
 #include <stdio.h>
 #include "lsm6ds3_reg.h"
-#include "..\Shift_Register\shift_reg.h"
+#include "Shift_Register\shift_reg.h"
 
 #include <stm32f4xx_hal.h>
 
