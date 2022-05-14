@@ -12,7 +12,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
+static int fix;
 static uint8_t uart_buffer[1000] = { 0 };
 static size_t uart_buffer_head = 0;
 static size_t uart_buffer_tail = 0;
@@ -185,6 +185,7 @@ int gps_work()
 			lat = minmea_tocoord(&gga.latitude);
 			lon = minmea_tocoord(&gga.longitude);
 			alt = minmea_tofloat(&gga.altitude);
+			fix = gga.fix_quality;
 			pos_cookie++;
 			alt_cookie++;
 			time_cookie++;
@@ -196,12 +197,13 @@ int gps_work()
 
 
 
-int gps_get_coords(int64_t * cookie, float * lat_, float * lon_, float * alt_)
+int gps_get_coords(int64_t * cookie, float * lat_, float * lon_, float * alt_, int *fix_)
 {
 	*cookie = pos_cookie;
 	*lat_ = lat;
 	*lon_ = lon;
 	*alt_ = alt;
+	*fix_ = fix;
 	return 0;
 }
 

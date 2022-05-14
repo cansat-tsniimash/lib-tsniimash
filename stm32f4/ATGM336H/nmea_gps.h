@@ -58,7 +58,7 @@ int gps_work();
  *   функция записывает координаты в переменные по указателю lat_, lon_ и alt_ и возвращает  0
  *   cookie - количество измерений
  */
-int gps_get_coords(int64_t * cookie, float * lat_, float * lon_, float * alt_);
+int gps_get_coords(int64_t * cookie, float * lat_, float * lon_, float * alt_, int *fix_);
 /*
  * функция записывает высоту в переменную по указателю alt и возвращает 0
  * cookie - количество измерений
