@@ -69,10 +69,11 @@ int gps_get_alt(int64_t * cookie, float * alt);
  *  cookie - количество измерений
  */
 int gps_get_time(int64_t * cookie, uint64_t * time_s, uint32_t * time_us);
-
-
-
-
+/*
+ * TODO для Паши: напиши коммент
+ *
+ */
+int gps_get_gga(int64_t * cookie, struct minmea_sentence_gga * gga_);
 
 
 
