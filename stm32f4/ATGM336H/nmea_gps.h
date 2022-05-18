@@ -43,6 +43,7 @@ while (1) {
 #define NMEA_GPS_H_
 
 #include <stdint.h>
+#include "minmea/minmea.h"
 
 int gps_init();
 /*

@@ -1,3 +1,6 @@
+#ifndef DLIS3_H_
+#define DLIS3_H_
+
 #include <stdio.h>
 #include "lis3mdl_reg.h"
 
@@ -31,4 +34,7 @@ void lisset(stmdev_ctx_t *ctx, struct lis_spi_intf *spi_interface);
 void lisread(stmdev_ctx_t *ctx, float *temperature_celsius_mag, float (*mag)[3]);
 
 void lisset_sr(stmdev_ctx_t *ctx, struct lis_spi_intf_sr *spi_interface);
-#endif
+
+#endif // HAL_SPI_MODULE_ENABLED
+
+#endif // DLIS3_H_

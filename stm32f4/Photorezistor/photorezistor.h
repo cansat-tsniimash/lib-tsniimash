@@ -11,6 +11,10 @@
  *                          _|_
  * зарисовка работы фоторезистора
  */
+
+#ifndef PHOTOREZISTOR_H_
+#define PHOTOREZISTOR_H_
+
 #include <math.h>
 #include <stdio.h>
 
@@ -28,4 +32,6 @@ typedef struct {
  */
 float photorezistor_get_lux(photorezistor_t);
 
-#endif
+#endif // HAL_ADC_MODULE_ENABLED
+
+#endif // PHOTOREZISTOR_H_
