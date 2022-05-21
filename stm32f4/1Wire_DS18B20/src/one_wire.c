@@ -39,7 +39,7 @@ static void delay_us(uint32_t delay)
 
 
 // Функция прижимает 1w шину к земле
-static void bus_force_down(ds18b20_t* this)
+void bus_force_down(ds18b20_t* this)
 {
 	port_init.Mode = GPIO_MODE_OUTPUT_OD;
 	HAL_GPIO_Init(this->onewire_port, &port_init);
@@ -47,7 +47,7 @@ static void bus_force_down(ds18b20_t* this)
 
 
 // Функция отпускает 1w шину (и дальше ей управляют ведомые или никто)
-static void bus_release(ds18b20_t* this)
+void bus_release(ds18b20_t* this)
 {
 	port_init.Mode = GPIO_MODE_INPUT;
 	HAL_GPIO_Init(this->onewire_port, &port_init);
@@ -55,7 +55,7 @@ static void bus_release(ds18b20_t* this)
 
 
 // Возвращает текущий логический уровень на 1w шине
-static bool bus_read(ds18b20_t* this)
+bool bus_read(ds18b20_t* this)
 {
 	return HAL_GPIO_ReadPin(this->onewire_port, this->onewire_pin) == GPIO_PIN_SET;
 }
@@ -84,12 +84,12 @@ static const uint8_t onewire_crc_table[] = {
 
 // Обновляет значение контольной суммы crc применением всех бит байта b.
 // Возвращает обновлённое значение контрольной суммы
-static uint8_t onewire_crc_update(uint8_t crc, uint8_t b) {
+uint8_t onewire_crc_update(uint8_t crc, uint8_t b) {
   return onewire_crc_table[crc ^ b];
 }
 
 // Считает контрольную сумму переданного блока памяти
-static uint8_t onewire_crc_calc(const uint8_t * data, size_t data_size)
+uint8_t onewire_crc_calc(const uint8_t * data, size_t data_size)
 {
 	uint8_t crc = 0;
 	for (size_t i = 0; i < data_size; i++)
@@ -250,7 +250,7 @@ void onewire_read_rom(ds18b20_t* this, uint8_t * rom_buffer)
 }
 
 
-int ds18b20_set_config(ds18b20_t* this, uint8_t alarm_th, uint8_t alarm_tl, ds18b20_resulution_t resolution)
+int ds18b20_set_config(ds18b20_t* this, int8_t alarm_th, int8_t alarm_tl, ds18b20_resulution_t resolution)
 {
 	// Считаем значение конфигурационного регистра соответствующее разрешению
 	uint8_t config_reg;

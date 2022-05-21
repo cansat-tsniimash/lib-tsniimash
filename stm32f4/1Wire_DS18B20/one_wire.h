@@ -26,16 +26,16 @@ typedef struct {
 //Lower api функции
 
 // Функция прижимает 1w шину к земле
-static void bus_force_down(ds18b20_t* this);
+void bus_force_down(ds18b20_t* this);
 // Функция отпускает 1w шину (и дальше ей управляют ведомые или никто)
-static void bus_release(ds18b20_t* this);
+void bus_release(ds18b20_t* this);
 // Возвращает текущий логический уровень на 1w шине
-static bool bus_read(ds18b20_t* this);
+bool bus_read(ds18b20_t* this);
 // Обновляет значение контольной суммы crc применением всех бит байта b.
 // Возвращает обновлённое значение контрольной суммы
-static uint8_t onewire_crc_update(uint8_t crc, uint8_t b);
+uint8_t onewire_crc_update(uint8_t crc, uint8_t b);
 // Считает контрольную сумму переданного блока памяти
-static uint8_t onewire_crc_calc(const uint8_t * data, size_t data_size);
+uint8_t onewire_crc_calc(const uint8_t * data, size_t data_size);
 
 //Upper api функции
 
@@ -92,7 +92,7 @@ void onewire_read_rom(ds18b20_t* this, uint8_t * rom_buffer);
    Для этой команды не предусмотрена проверка целостности данных с
    использованием контрольной суммы, поэтому имеет смысл проверить установленные настройки при
    помощи TODO функции */
-int ds18b20_set_config(ds18b20_t* this, uint8_t alarm_th, uint8_t alarm_tl, ds18b20_resulution_t resolution);
+int ds18b20_set_config(ds18b20_t* this, int8_t alarm_th, int8_t alarm_tl, ds18b20_resulution_t resolution);
 
 // Запуск процесса измерения
 /* Этап адресации пропускается - работаем с одним или же всеми датчиками на шине сразу.
