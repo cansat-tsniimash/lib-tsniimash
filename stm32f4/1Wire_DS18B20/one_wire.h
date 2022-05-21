@@ -23,7 +23,7 @@ typedef struct {
    uint16_t onewire_pin;
 } ds18b20_t;
 
-//LowLevel Funcs
+//Lower api функции
 
 // Функция прижимает 1w шину к земле
 static void bus_force_down(ds18b20_t* this);
@@ -37,7 +37,7 @@ static uint8_t onewire_crc_update(uint8_t crc, uint8_t b);
 // Считает контрольную сумму переданного блока памяти
 static uint8_t onewire_crc_calc(const uint8_t * data, size_t data_size);
 
-//HighLevel funcs
+//Upper api функции
 
 // Инициализация необходимой периферии для работы 1w шины
 int onewire_init(ds18b20_t* this);
@@ -76,7 +76,7 @@ void onewire_skip_rom(ds18b20_t* this);
    rom_buffer должен быть массивом длинной не меньше 8 байт, а то быть беде */
 void onewire_read_rom(ds18b20_t* this, uint8_t * rom_buffer);
 
-//DS18B20 funcs
+//Функции для работы с DS18B20
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // Настройка датчика
