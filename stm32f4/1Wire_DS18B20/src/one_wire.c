@@ -319,7 +319,7 @@ int ds18b20_read_raw_temperature(ds18b20_t* this, uint16_t * raw_temperature, bo
 {
 	// даем reset на шину
 	int reset_status = onewire_reset(this);
-	// Если никто не наго не ответил или что-то пошло не так, то продолжать нет смысла
+	// Если никто на него не ответил или что-то пошло не так, то продолжать нет смысла
 	if (0 != reset_status)
 		return reset_status;
 
