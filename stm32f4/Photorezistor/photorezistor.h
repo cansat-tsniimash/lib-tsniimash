@@ -30,7 +30,7 @@ typedef struct {
 /*
  * переводим из показателей фоторезистора в люксы
  */
-float photorezistor_get_lux(photorezistor_t);
+float photorezistor_get_lux(photorezistor_t ph);
 
 #endif // HAL_ADC_MODULE_ENABLED
 
