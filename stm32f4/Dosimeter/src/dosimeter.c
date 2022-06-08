@@ -37,14 +37,12 @@ void Dosimeter_Callback(uint16_t pin, uint16_t dosimeter_pin) {
 	}
 }
 
-//Ticks Per (last) Minute
 double Dosimeter_Get_TPM() {
 	uint32_t sum = 0;
 	for (uint8_t i = 0; i < buffer_size; i += 1) sum += dosimeter_buffer[i];
 	return sum / 60.0;
 }
 
-//Ticks Per Second (from buffer)
 uint32_t Dosimeter_Get_TPS(uint8_t num) {
 	return dosimeter_buffer[num];
 }
