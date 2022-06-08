@@ -10,7 +10,7 @@ void Dosimeter_Callback(uint16_t pin, uint16_t dosimeter_pin);
 double Dosimeter_Get_TPM();
 
 //Ticks Per (last) Second
-uint32_t Dosimeter_Get_TPS(uint8_t num);
+uint32_t Dosimeter_Get_TPS();
 
 //All ticks, that 've been counted by dosimeter (ignoring cyclobuffer)
 uint32_t Dosimeter_Get_Sum();
