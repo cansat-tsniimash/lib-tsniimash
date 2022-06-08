@@ -43,18 +43,18 @@ void Dosimeter_Callback(uint16_t pin, uint16_t dosimeter_pin) {
 	}
 }
 
-double Dosimeter_Get_TPM() {
-	uint32_t sum = 0;
-	for (uint8_t i = 0; i < buffer_size; i += 1) sum += dosimeter_buffer[i];
-	return sum / 60.0;
-}
-
 uint32_t Dosimeter_Get_TPS() {
 	if (HAL_GetTick() - last_second * 1000 < 1000) {
 		return dosimeter_buffer[buffer_head - 1];
 	} else {
 		return 0;
 	}
+}
+
+uint32_t Dosimeter_Get_TPM() {
+	uint32_t sum = 0;
+	for (uint8_t i = 0; i < buffer_size; i += 1) sum += dosimeter_buffer[i];
+	return sum;
 }
 
 uint32_t Dosimeter_Get_Sum() {

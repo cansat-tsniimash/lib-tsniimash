@@ -6,11 +6,11 @@
 //Custom Dosimeter Callback, use this in HAL_GPIO_EXTI_Callback
 void Dosimeter_Callback(uint16_t pin, uint16_t dosimeter_pin);
 
-//Ticks Per (last) Minute
-double Dosimeter_Get_TPM();
-
 //Ticks Per (last) Second
 uint32_t Dosimeter_Get_TPS();
+
+//Ticks Per (last) Minute
+uint32_t Dosimeter_Get_TPM();
 
 //All ticks, that 've been counted by dosimeter (ignoring cyclobuffer)
 uint32_t Dosimeter_Get_Sum();
