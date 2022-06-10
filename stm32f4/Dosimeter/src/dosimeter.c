@@ -23,13 +23,13 @@ static void cyclobuffer_update(uint32_t time_ms) {
 			buffer_head %= buffer_size;
 			tick_count = 1;
 		} else {
-			for (uint8_t i = buffer_head; i < buffer_size; i += 1) dosimeter_buffer[i] = 0;
+			for (uint8_t i = buffer_head; i < buffer_size; i++) dosimeter_buffer[i] = 0;
 			buffer_head += (time_delta_sec % buffer_size);
 			buffer_head %= buffer_size;
-			for (uint8_t i = 0; i < buffer_head; i += 1) dosimeter_buffer[i] = 0;
+			for (uint8_t i = 0; i < buffer_head; i++) dosimeter_buffer[i] = 0;
 		}
 	} else {
-		for (uint8_t i = buffer_head; i < buffer_head + time_delta_sec; i += 1) dosimeter_buffer[i] = 0;
+		for (uint8_t i = buffer_head; i < buffer_head + time_delta_sec; i++) dosimeter_buffer[i] = 0;
 		buffer_head += time_delta_sec;
 	}
 	last_second += time_delta_sec;
@@ -38,11 +38,11 @@ static void cyclobuffer_update(uint32_t time_ms) {
 
 void Dosimeter_Callback(uint16_t pin, uint16_t dosimeter_pin) {
 	if (pin == dosimeter_pin) {
-		ticks_sum += 1;
+		ticks_sum++;
 		uint32_t time_ms = HAL_GetTick();
 		uint32_t time_delta = time_ms - last_second * 1000;
 		if (time_delta < 1000) {
-			tick_count += 1;
+			tick_count++;
 		} else {
 			cyclobuffer_update(time_ms);
 		}
@@ -60,7 +60,7 @@ uint32_t Dosimeter_Get_TPM() {
 	uint32_t time_ms = HAL_GetTick();
 	cyclobuffer_update(time_ms);
 	uint32_t sum = 0;
-	for (uint8_t i = 0; i < buffer_size; i += 1) sum += dosimeter_buffer[i];
+	for (uint8_t i = 0; i < buffer_size; i++) sum += dosimeter_buffer[i];
 	return sum;
 }
 
