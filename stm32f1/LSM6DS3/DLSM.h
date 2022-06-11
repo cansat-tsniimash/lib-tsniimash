@@ -2,7 +2,8 @@
  * Achtung!!!!!!
  * В файле .с также есть остальные необходимые для осознавания принципа работы драйвера комменты!
  * Вам самим необходимо написать апп_майн. Это можно сделать по проверенному примеру:
- * #include <stdio.h>
+
+#include <stdio.h>
 
 #include "LIS3MDL/DLIS3.h"
 #include "LSM6DS3/DLSM.h"
@@ -34,11 +35,12 @@ int app_main()
  *
  */
 
-
+#ifndef DLSM_H_
+#define DLSM_H_
 
 #include <stdio.h>
 #include "lsm6ds3_reg.h"
-#include "..\Shift_Register\shift_reg.h"
+#include "Shift_Register\shift_reg.h"
 
 #include <stm32f1xx_hal.h>
 
@@ -70,4 +72,7 @@ void lsmread(stmdev_ctx_t *ctx, float *temperature_celsius_gyro, float (*acc_g)[
 
 
 void lsmset_sr(stmdev_ctx_t *ctx, struct lsm_spi_intf_sr *spi_interface);
-#endif
+
+#endif // HAL_SPI_MODULE_ENABLED
+
+#endif // DLSM_H_

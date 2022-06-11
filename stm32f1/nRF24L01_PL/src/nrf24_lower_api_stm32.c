@@ -45,7 +45,9 @@ static void _nrf24_CS_sr(void * intf_ptr, bool mode)
 	}
 	else
 	{
+		shift_reg_oe(api_config_low->this, true);
 		shift_reg_write_bit_8(api_config_low->this, api_config_low->pos_CS, !mode);
+		shift_reg_oe(api_config_low->this, false);
 	}
 }
 
@@ -216,7 +218,10 @@ void _nrf24_CE_sr(void * intf_ptr, bool onoff)
 {
 	nrf24_lower_api_config_t *api_config = (nrf24_lower_api_config_t *)intf_ptr;
 	nrf24_spi_pins_sr_t *api_config_low = (nrf24_spi_pins_sr_t *)api_config->intf_ptr;
+
+	shift_reg_oe(api_config_low->this, true);
 	shift_reg_write_bit_8(api_config_low->this, api_config_low->pos_CE, onoff);
+	shift_reg_oe(api_config_low->this, false);
 }
 
 void nrf24_spi_init(nrf24_lower_api_config_t* nrf24, SPI_HandleTypeDef *hspi, nrf24_spi_pins_t* pins)
