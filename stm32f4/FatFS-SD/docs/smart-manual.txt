@@ -13,8 +13,7 @@ int app_main(void)
 	UINT testBytes; // количество символов, реально записанных внутрь файла
 	FRESULT res; // результат выполнения функции
 	if(f_mount(&fileSystem, SDPath, 1) == FR_OK) { // монтируете файловую систему по пути SDPath, проверяете, что она смонтировалась, только при этом условии начинаете с ней работать
-		uint8_t path[13] = "testfile.txt"; // название файла
-		path[12] = '\0'; // добавляем символ конца строки в конец строки
+		const char path[] = "testfile.txt"; // название файла
 		res = f_open(&testFile, (char*)path, FA_WRITE | FA_CREATE_ALWAYS); // открытие файла, обязательно для работы с ним
 		res = f_write(&testFile, (uint8_t*) testBuffer, sizeof(testBuffer), &testBytes); // отправка на запись в файл
 		res = f_sync(&testFile); // запись в файл (на sd контроллер пишет не сразу, а по закрытии файла. Также можно использовать эту команду)
