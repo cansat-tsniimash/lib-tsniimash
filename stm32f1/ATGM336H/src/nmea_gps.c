@@ -12,7 +12,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
+static int fix;
 static uint8_t uart_buffer[1000] = { 0 };
 static size_t uart_buffer_head = 0;
 static size_t uart_buffer_tail = 0;
@@ -31,6 +31,9 @@ static int64_t time_cookie;
 static uint64_t time_s;
 static uint32_t time_us;
 
+static struct minmea_sentence_gga gga;
+
+
 static uint16_t schetchik = 0;
 
 
@@ -38,6 +41,7 @@ static uint16_t schetchik = 0;
 
 static bool cb_push(uint8_t byte)
 {
+
 	size_t next_head = uart_buffer_head + 1;
 	if (next_head >= sizeof(uart_buffer) / sizeof(uart_buffer[0]))
 		next_head = 0;
@@ -106,7 +110,6 @@ int gps_init()
 	uart_buffer_tail = 0;
 	pavel_gps_sost = 0;
 
-	//pavel_gps_buffer
 	pavel_gps_carret = 0;
 	return 0;
 }
@@ -182,6 +185,7 @@ int gps_work()
 			lat = minmea_tocoord(&gga.latitude);
 			lon = minmea_tocoord(&gga.longitude);
 			alt = minmea_tofloat(&gga.altitude);
+			fix = gga.fix_quality;
 			pos_cookie++;
 			alt_cookie++;
 			time_cookie++;
@@ -193,12 +197,13 @@ int gps_work()
 
 
 
-int gps_get_coords(int64_t * cookie, float * lat_, float * lon_, float * alt_)
+int gps_get_coords(int64_t * cookie, float * lat_, float * lon_, float * alt_, int *fix_)
 {
 	*cookie = pos_cookie;
 	*lat_ = lat;
 	*lon_ = lon;
 	*alt_ = alt;
+	*fix_ = fix;
 	return 0;
 }
 
@@ -216,5 +221,12 @@ int gps_get_time(int64_t * cookie, uint64_t * time_s_, uint32_t * time_us_)
 	*cookie = time_cookie;
 	*time_s_ = time_s;
 	*time_us_ = time_us;
+	return 0;
+}
+
+int gps_get_gga(int64_t * cookie, struct minmea_sentence_gga * gga_)
+{
+	*cookie = time_cookie;
+	*gga_ = gga;
 	return 0;
 }

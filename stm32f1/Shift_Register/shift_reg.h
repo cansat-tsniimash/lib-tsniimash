@@ -26,7 +26,7 @@ void shift_reg_push_16(shift_reg_t *this, uint16_t buffer);
 // Функция для применения изменений
 void shift_reg_latch(shift_reg_t *this);
 // Функция для поднятия/опускания OE
-void shift_reg_oe(shift_reg_t *this, bool onoff);
+void shift_reg_oe(shift_reg_t *this, bool onoff); // true значит выключить, false - включить
 // Функция для передачи в сдвиговый регистр одного байта с последующим применением изменений
 void shift_reg_write_8(shift_reg_t *this, uint8_t buffer);
 // Функция для передачи в сдвиговый регистр двух байт с последующим применением изменений

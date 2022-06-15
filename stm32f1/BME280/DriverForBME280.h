@@ -5,8 +5,8 @@
  */
 
 
-
-
+#ifndef DRIVER_FOR_BME280_H_
+#define DRIVER_FOR_BME280_H_
 
 #include <stm32f1xx_hal.h>
 
@@ -52,4 +52,7 @@ struct bme280_data bme_read_data(struct bme280_dev *bme);
 
 
 void bme_init_default_sr( struct bme280_dev *bme, struct bme_spi_intf_sr* spi_intf);
-#endif
+
+#endif // HAL_SPI_MODULE_ENABLED
+
+#endif // DRIVER_FOR_BME280_H_
