@@ -322,6 +322,54 @@ int nrf24_fifo_flush_rx(void * intf_ptr)
 }
 
 
+int nrf24_irq_mask_set(void * intf_ptr, int composition)
+{
+	// Читаем конфигурационный регистр
+	uint8_t config_reg;
+	nrf24_read_register(intf_ptr, NRF24_REGADDR_CONFIG, &config_reg, sizeof(config_reg));
+
+	// Ставим во все биты маскирования единицы (это выключает прерывания)
+	config_reg |= NRF24_CONFIG_MASK_MAX_RT | NRF24_CONFIG_MASK_TX_DR | NRF24_CONFIG_MASK_RX_DR;
+
+	// Тушим соответствующие единицы
+	if (NRF24_IRQ_MAX_RT & composition)
+		config_reg &= ~NRF24_CONFIG_MASK_MAX_RT;
+
+	if (NRF24_IRQ_TX_DR & composition)
+		config_reg &= ~NRF24_CONFIG_MASK_TX_DR;
+
+	if (NRF24_IRQ_RX_DR & composition)
+		config_reg &= ~NRF24_CONFIG_MASK_RX_DR;
+
+	// Пишем конфигурационный регистр обратно
+	nrf24_write_register(intf_ptr, NRF24_REGADDR_CONFIG, &config_reg, sizeof(config_reg));
+
+	return 0;
+}
+
+
+int nrf24_irq_mask_get(void * intf_ptr, int * composition)
+{
+	uint8_t config_reg;
+	nrf24_read_register(intf_ptr, NRF24_REGADDR_CONFIG, &config_reg, sizeof(config_reg));
+
+	// Пока что считаем что включены все
+	*composition = NRF24_IRQ_MAX_RT | NRF24_IRQ_TX_DR | NRF24_IRQ_RX_DR;
+
+	// Смотрим какие выключены (единица это имено выключенно а не включено)
+	if (config_reg & NRF24_CONFIG_MASK_MAX_RT)
+		*composition &= ~NRF24_IRQ_MAX_RT;
+
+	if (config_reg & NRF24_CONFIG_MASK_TX_DR)
+		*composition &= ~NRF24_IRQ_TX_DR;
+
+	if (config_reg & NRF24_CONFIG_MASK_RX_DR)
+		*composition &= ~NRF24_IRQ_RX_DR;
+
+	return 0;
+}
+
+
 int nrf24_irq_get(void * intf_ptr, int * composition)
 {
 	uint8_t status_reg = 0;
