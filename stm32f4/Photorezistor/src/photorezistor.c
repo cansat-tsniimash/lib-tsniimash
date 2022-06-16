@@ -1,13 +1,10 @@
 #include <math.h>
-#include <stdio.h>
 #include "../photorezistor.h"
-
 
 #ifdef HAL_ADC_MODULE_ENABLED
 
 
 float photorezistor_get_lux(photorezistor_t ph) {
-
 		  HAL_ADC_Start(ph.hadc);
 		  HAL_ADC_PollForConversion(ph.hadc, 100);
 		  float volts = HAL_ADC_GetValue(ph.hadc) * 3.3 / 4095;	//Volts
@@ -16,4 +13,6 @@ float photorezistor_get_lux(photorezistor_t ph) {
 		  HAL_ADC_Stop(ph.hadc);
 		  return lux;
 }
+
+
 #endif
