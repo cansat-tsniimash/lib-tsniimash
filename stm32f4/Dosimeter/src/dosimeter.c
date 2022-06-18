@@ -1,6 +1,7 @@
 #include "../dosimeter.h"
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <string.h>
 #include <stm32f4xx_hal.h>
 
@@ -11,6 +12,14 @@ static uint32_t ticks_sum = 0;
 static uint8_t buffer_head = 0;
 static uint32_t last_second = 0;
 static uint32_t tick_count = 0;
+
+bool dosimeter_1sec_past(void) {
+	if (HAL_GetTick() - last_second * 1000 < 1000) {
+		return false;
+	} else {
+		return true;
+	}
+}
 
 static void cyclobuffer_update(uint32_t time_ms) {
 	uint32_t time_delta = time_ms - last_second * 1000;
@@ -63,4 +72,3 @@ uint32_t Dosimeter_Get_TPM(void) {
 uint32_t Dosimeter_Get_Sum(void) {
 	return ticks_sum;
 }
-
