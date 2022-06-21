@@ -59,7 +59,7 @@ void Dosimeter_Callback(uint16_t pin, uint16_t dosimeter_pin) {
 
 uint32_t Dosimeter_Get_TPS(void) {
 	cyclobuffer_update(HAL_GetTick());
-	return dosimeter_buffer[buffer_head - 1];
+	return dosimeter_buffer[(buffer_head + buffer_size - 1) % buffer_size];
 }
 
 uint32_t Dosimeter_Get_TPM(void) {
