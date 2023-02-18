@@ -1,7 +1,7 @@
 #include "../shift_reg.h"
 #ifdef HAL_SPI_MODULE_ENABLED
 
-#include "DWT_Delay/dwt_delay.h"
+#include "Delay/delay.h"
 
 void shift_reg_init(shift_reg_t *this) {
 	HAL_GPIO_WritePin(this->latch_port, this->latch_pin, GPIO_PIN_RESET);
@@ -21,9 +21,9 @@ void shift_reg_push_16(shift_reg_t *this, uint16_t buffer) {
 }
 
 void shift_reg_latch(shift_reg_t *this) {
-	dwt_delay_init();
+	delay_init();
 	HAL_GPIO_WritePin(this->latch_port, this->latch_pin, GPIO_PIN_SET);
-	dwt_delay_us(1);
+	delay_us(1);
 	HAL_GPIO_WritePin(this->latch_port, this->latch_pin, GPIO_PIN_RESET);
 }
 

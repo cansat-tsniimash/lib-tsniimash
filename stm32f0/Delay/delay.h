@@ -5,11 +5,11 @@
 #include <stdint.h>
 
 
-int dwt_delay_init(void);
+int delay_init(void);
 
-void dwt_delay_us(uint32_t pause_us);
+void delay_us(uint32_t us);
 
-void dwt_delay_ms(uint32_t pause_ms);
+void delay_ms(uint32_t ms);
 
 
 #endif /* INC_DWT_DELAY_H_ */
