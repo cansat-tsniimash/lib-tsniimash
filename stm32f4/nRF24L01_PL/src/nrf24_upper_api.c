@@ -1,6 +1,8 @@
 #include <stm32f4xx_hal.h>
 #ifdef HAL_SPI_MODULE_ENABLED
 
+#include <stdio.h>
+
 #include "../nrf24_upper_api.h"
 #include "../nrf24_lower_api.h"
 #include "../nrf24_defs.h"
@@ -384,6 +386,114 @@ int nrf24_irq_clear(void * intf_ptr, int composition)
 	uint8_t status_reg = (composition & NRF24_STATUS_FLAG_MASK) << NRF24_STATUS_FLAG_OFFSET;
 	nrf24_write_register(intf_ptr, NRF24_REGADDR_STATUS, &status_reg, 1);
 	return 0;
+}
+
+
+static void print_bits(uint8_t value, char * buffer)
+{
+	for (size_t i = 0; i < sizeof(value)*8; i++)
+	{
+		int bit = value & (0x01 << 7);
+		sprintf(buffer, "%d", bit ? 1 : 0);
+		value = value << 1;
+		buffer += 1;
+	}
+}
+
+
+typedef struct reg_param_t
+{
+	uint8_t addr;
+	const char * name;
+	uint8_t size;
+} reg_param_t;
+
+
+static reg_param_t reg_params[] = {
+	{ NRF24_REGADDR_CONFIG, "NRF24_REGADDR_CONFIG",			1},
+	{ NRF24_REGADDR_EN_AA, "NRF24_REGADDR_EN_AA",				1},
+	{ NRF24_REGADDR_EN_RXADDR, "NRF24_REGADDR_EN_RXADDR",		1},
+	{ NRF24_REGADDR_SETUP_AW, "NRF24_REGADDR_SETUP_AW",		1},
+	{ NRF24_REGADDR_SETUP_RETR, "NRF24_REGADDR_SETUP_RETR",	1},
+	{ NRF24_REGADDR_RF_CH, "NRF24_REGADDR_RF_CH",				1},
+	{ NRF24_REGADDR_RF_SETUP, "NRF24_REGADDR_RF_SETUP",		1},
+	{ NRF24_REGADDR_STATUS, "NRF24_REGADDR_STATUS",			1},
+	{ NRF24_REGADDR_OBSERVE_TX, "NRF24_REGADDR_OBSERVE_TX",	1},
+	{ NRF24_REGADDR_RPD, "NRF24_REGADDR_RPD",					1},
+	{ NRF24_REGADDR_RX_ADDR_P0, "NRF24_REGADDR_RX_ADDR_P0",	5},
+	{ NRF24_REGADDR_RX_ADDR_P1, "NRF24_REGADDR_RX_ADDR_P1",	5},
+	{ NRF24_REGADDR_RX_ADDR_P2, "NRF24_REGADDR_RX_ADDR_P2",	1},
+	{ NRF24_REGADDR_RX_ADDR_P3, "NRF24_REGADDR_RX_ADDR_P3",	1},
+	{ NRF24_REGADDR_RX_ADDR_P4, "NRF24_REGADDR_RX_ADDR_P4",	1},
+	{ NRF24_REGADDR_RX_ADDR_P5, "NRF24_REGADDR_RX_ADDR_P5",	1},
+	{ NRF24_REGADDR_TX_ADDR, "NRF24_REGADDR_TX_ADDR",			5},
+	{ NRF24_REGADDR_RX_PW_P0, "NRF24_REGADDR_RX_PW_P0",		1},
+	{ NRF24_REGADDR_RX_PW_P1, "NRF24_REGADDR_RX_PW_P1",		1},
+	{ NRF24_REGADDR_RX_PW_P2, "NRF24_REGADDR_RX_PW_P2",		1},
+	{ NRF24_REGADDR_RX_PW_P3, "NRF24_REGADDR_RX_PW_P3",		1},
+	{ NRF24_REGADDR_RX_PW_P4, "NRF24_REGADDR_RX_PW_P4",		1},
+	{ NRF24_REGADDR_RX_PW_P5, "NRF24_REGADDR_RX_PW_P5",		1},
+	{ NRF24_REGADDR_FIFO_STATUS, "NRF24_REGADDR_FIFO_STATUS", 1},
+	{ NRF24_REGADDR_DYNPD, "NRF24_REGADDR_DYNPD",				1},
+	{ NRF24_REGADDR_FEATURE, "NRF24_REGADDR_FEATURE",			1}
+};
+
+
+static void print_register(uint8_t reg_addr, uint8_t * reg_data)
+{
+	reg_param_t * selected_param = NULL;
+	for (size_t i = 0; i < sizeof(reg_params)/sizeof(reg_params[0]); i++)
+	{
+		if (reg_addr == reg_params[i].addr)
+		{
+			selected_param  = &reg_params[i];
+			break;
+		}
+	}
+
+	if (NULL == selected_param)
+	{
+
+		printf("invalid reg addr: %d\n", reg_addr);
+		return;
+	}
+
+	const char * reg_name = selected_param->name;
+	const size_t reg_size = selected_param->size;
+
+	printf("reg %s (0x%02X) = ", reg_name, (int)reg_addr);
+	if (1 == reg_size)
+	{
+		printf("0x%02X", reg_data[0]);
+		char bits_buffer[10] = {0};
+		print_bits(reg_data[0], bits_buffer);
+		printf(" (0b%s)", bits_buffer);
+	}
+	else
+	{
+		printf("0x");
+		for (size_t j = 0; j < reg_size; j++)
+		{
+			printf("%02X", reg_data[j]);
+		}
+	}
+	printf("\n");
+}
+
+
+void nrf24_dump_registers(void *intf_ptr)
+{
+	const size_t regs_count = sizeof(reg_params)/sizeof(reg_params[0]);
+	for (size_t i = 0 ; i < regs_count; i++)
+	{
+		uint8_t reg_addr = reg_params[i].addr;
+		uint8_t reg_size = reg_params[i].size;
+
+		uint8_t reg_data[5] = { 0 };
+		nrf24_read_register(intf_ptr, reg_addr, reg_data, reg_size);
+
+		print_register(reg_addr, reg_data);
+	}
 }
 
 #endif /* HAL_SPI_MODULE_ENABLED */

@@ -344,4 +344,8 @@ int nrf24_irq_get(void * intf_ptr, int * composition);
    Если все хорошо - вернет 0. Если нет - вернет что-то другое */
 int nrf24_irq_clear(void * intf_ptr, int composition);
 
+
+void nrf24_dump_registers(void *intf_ptr);
+
+
 #endif /* NRF24_UPPER_H_ */
