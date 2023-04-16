@@ -21,6 +21,7 @@ static void _nrf24_CS(void * intf_ptr, bool mode)
 	nrf24_spi_pins_t *api_config_low = (nrf24_spi_pins_t *)api_config->intf_ptr;
 	if (mode)
 	{
+		api_config->hspi->Instance->CR1 &= ~(uint32_t)(0b11); // Делаем CPHA CPOL как надо
 		// Опускаем chip select для того, что бы начать общение с конкретным устройством.
 		HAL_GPIO_WritePin(api_config_low->cs_port, api_config_low->cs_pin,  GPIO_PIN_RESET);
 		//HAL_Delay(11);
