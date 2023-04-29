@@ -5,6 +5,8 @@
  *      Author: Install
  */
 
+#include "Shift_Register/shift_reg.h"
+
 #ifndef MX25L512__MX25L512_H_
 #define MX25L512__MX25L512_H_
 
@@ -32,11 +34,30 @@
 
 typedef struct bus_s
 {
-	GPIO_TypeDef* GPIOx;
-	uint16_t GPIO_Pin;
+	void (*mx25l512_CS)(void * intf_ptr, bool mode);
 	SPI_HandleTypeDef *hspi;
+	void *intf_ptr;
 }bus_t;
 
+// Структура, содержащая параметры SPI пиноа SPI Chip Select
+typedef struct mx25l512_spi_pins_t
+{
+	// Настройки SPI Chip Select
+	GPIO_TypeDef *cs_port;
+	uint16_t cs_pin;
+} mx25l512_spi_pins_t;
+
+// Структура, содержащая параметры SPI пина SPI Chip Select для сдвигового регистра
+typedef struct mx25l512_spi_pins_sr_t
+{
+	shift_reg_t *this;
+	// Настройки SPI Chip Select
+	uint8_t pos_CS;
+} mx25l512_spi_pins_sr_t;
+
+
+void mx25l512_spi_init(bus_t *bus, SPI_HandleTypeDef *hspi, mx25l512_spi_pins_t *pins);
+void mx25l512_spi_init_sr(bus_t *bus, SPI_HandleTypeDef *hspi, mx25l512_spi_pins_sr_t *pins);
 
 //Разрешение записи (нужно для работы PP, SE, BE, CE, WRSR)
 /*
