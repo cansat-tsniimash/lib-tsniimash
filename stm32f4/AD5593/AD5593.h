@@ -7,11 +7,11 @@
 
 #ifndef AD5593_AD5593_H_
 #define AD5593_AD5593_H_
+
 typedef struct AD5593_s
 {
-	I2C_HandleTypeDef *bus;
-	uint8_t addr;
-
+//	I2C_HandleTypeDef *bus;
+//	uint8_t addr;
 } AD5593_t;
 
 enum AD5593_ADDR
@@ -20,11 +20,8 @@ enum AD5593_ADDR
 	AD5593_ADDR_1 = 0x22
 };
 
-void AD5593_init(AD5593_t ad);
+#define AD5593_TIMEOUT 10
 
-void AD5593_read_reg(AD5593_t ad);
-
-void AD5593_write_reg(AD5593_t ad);
 
 
 
