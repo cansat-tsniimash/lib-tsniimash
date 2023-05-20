@@ -23,7 +23,7 @@ void shift_reg_push_16(shift_reg_t *this, uint16_t buffer) {
 void shift_reg_latch(shift_reg_t *this) {
 	dwt_delay_init();
 	HAL_GPIO_WritePin(this->latch_port, this->latch_pin, GPIO_PIN_SET);
-	dwt_delay_us(1);
+	dwt_delay_us(10);
 	HAL_GPIO_WritePin(this->latch_port, this->latch_pin, GPIO_PIN_RESET);
 }
 
