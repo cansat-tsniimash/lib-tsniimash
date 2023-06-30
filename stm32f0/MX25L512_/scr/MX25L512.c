@@ -104,12 +104,7 @@ void mx25l512_read(bus_t *bus, uint32_t *addr, uint8_t *pData, size_t size)
 	bus->mx25l512_CS(bus->intf_ptr, true);
 	HAL_SPI_Transmit(bus->hspi, &cmd, 1, MX25L512_TIMEOUT);
 	HAL_SPI_Transmit(bus->hspi, (uint8_t *)addr, 3, MX25L512_TIMEOUT);
-	volatile int error;
-	error = HAL_SPI_Receive(bus->hspi, pData, size, MX25L512_TIMEOUT);
-	if (error != HAL_OK)
-	{
-		volatile int x = 0;
-	}
+	HAL_SPI_Receive(bus->hspi, pData, size, MX25L512_TIMEOUT);
 	bus->mx25l512_CS(bus->intf_ptr, false);
 }
 
