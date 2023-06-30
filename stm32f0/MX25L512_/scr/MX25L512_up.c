@@ -36,7 +36,21 @@ int mx25l512_PP_up (bus_t *bus, uint32_t *addr, uint8_t *data, size_t size, uint
 		if (HAL_GetTick() - start_time > timeout)
 			return ARTEM_TIMEOUT;
 	}
+	while((stat_reg & 0x01) != 0)
+		{
+			mx25l512_rdsr(bus, &stat_reg);
+			if (HAL_GetTick() - start_time > timeout)
+				return ARTEM_TIMEOUT;
+		}
 	mx25l512_PP(bus, addr, data, size);
+	timeout = HAL_GetTick();
+	do
+	{
+		mx25l512_rdsr(bus, &stat_reg);
+		if (HAL_GetTick() - start_time > timeout)
+			return ARTEM_TIMEOUT;
+	}
+	while((stat_reg & 0x01) != 0);
 	return 0;
 }
 
@@ -82,5 +96,13 @@ int mx25l512_CE_up (bus_t *bus, uint32_t timeout)
 			return ARTEM_TIMEOUT;
 	}
 	mx25l512_CE(bus);
+	timeout = HAL_GetTick();
+	do
+	{
+		mx25l512_rdsr(bus, &stat_reg);
+		if (HAL_GetTick() - start_time > timeout)
+			return ARTEM_TIMEOUT;
+	}
+	while((stat_reg & 0x01) != 0);
 	return 0;
 }
