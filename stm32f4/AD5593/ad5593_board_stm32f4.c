@@ -6,6 +6,10 @@
 #include <stdlib.h>
 
 
+#include <stm32f4xx_hal.h>
+#ifdef HAL_I2C_MODULE_ENABLED
+
+
 //! Дескриптор шины для линуксового i2cdev
 struct ad5593_board_t
 {
@@ -58,3 +62,5 @@ int ad5593_brd_read(ad5593_board_t * brd, uint8_t addr, uint8_t pointer, uint16_
     *data = ((raw_data & 0x00FF) << 8) | ((raw_data & 0xFF00) >> 8);
     return 0;
 }
+
+#endif // HAL_I2C_MODULE_ENABLED

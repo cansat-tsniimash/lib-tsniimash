@@ -145,3 +145,5 @@ int ad5593_adc_auto_read(ad5593_t * device, ad5593_channel_id_t * channel, uint1
 // Никакой магии, просто функцией ad5593_adc_read читаем интересующий нас канал
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 int ad5593_adc_read(ad5593_t * device, ad5593_channel_id_t channel, uint16_t * value);
+
+
