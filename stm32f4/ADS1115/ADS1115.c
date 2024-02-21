@@ -4,6 +4,8 @@
  *  Created on: Dec 1, 2023
  *      Author: Роберт
  */
+#include <stm32f4xx_hal.h>
+
 #ifdef HAL_I2C_MODULE_ENABLED
 
 #include "ADS1115.h"
