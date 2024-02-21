@@ -9,6 +9,7 @@
 #ifdef HAL_I2C_MODULE_ENABLED
 
 #include "ADS1115.h"
+#include "ADS1115/i2c-crutch.h"
 
 //ads пишет
 int ads1115_write(ads1115_t *ads, uint8_t reg_addr, uint16_t reg_data, uint32_t Timeout)
@@ -17,10 +18,17 @@ int ads1115_write(ads1115_t *ads, uint8_t reg_addr, uint16_t reg_data, uint32_t 
 	data[2] = (uint8_t)reg_data;
 	data[1] = (uint8_t)(reg_data >> 8);
 	data[0] = reg_addr;
-	//int res = HAL_I2C_Master_Transmit(ads->hi2c, ads->DevAddress, &reg_addr, 1, Timeout);
-	//if (res != HAL_OK)
-	//		return res;
-	int res = HAL_I2C_Master_Transmit(ads->hi2c, ads->DevAddress, data, 3, Timeout);
+	int res = HAL_I2C_Master_Transmit(ads->hi2c, ads->DevAddress, &reg_addr, 1, Timeout);
+	if (res != HAL_OK)
+	{
+		I2C_ClearBusyFlagErratum(ads->hi2c, 10);
+		return res;
+	}
+	res = HAL_I2C_Master_Transmit(ads->hi2c, ads->DevAddress, data, 3, Timeout);
+	if (res != HAL_OK)
+	{
+		I2C_ClearBusyFlagErratum(ads->hi2c, 10);
+	}
 	return res;
 }
 //ads читает
@@ -29,8 +37,16 @@ int ads1115_read(ads1115_t *ads, uint8_t reg_addr, uint16_t *reg_data, uint32_t 
 	uint8_t data[2];
 	int res = HAL_I2C_Master_Transmit(ads->hi2c, ads->DevAddress, &reg_addr, 1, Timeout);
 	if (res != HAL_OK)
+	{
+		I2C_ClearBusyFlagErratum(ads->hi2c, 10);
 		return res;
+	}
 	res = HAL_I2C_Master_Receive(ads->hi2c, ads->DevAddress, data, 2, Timeout);
+	if (res != HAL_OK)
+	{
+		I2C_ClearBusyFlagErratum(ads->hi2c, 10);
+		return res;
+	}
 	*reg_data = (data[0] << 8) + data[1];
 	return res;
 }
